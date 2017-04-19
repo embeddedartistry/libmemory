@@ -9,8 +9,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-//contains aligned_malloc and aligned_free prototypes
-#include "memory.h"
+#include "aligned_malloc.h"
+#include "malloc.h"
 
 /**
 * Definitions
