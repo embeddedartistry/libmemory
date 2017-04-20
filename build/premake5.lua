@@ -45,10 +45,10 @@ workspace "EmbeddedArtistry libmalloc"
 
   filter {} -- clear filter when you know you no longer need it!
 
-  project "libmalloc_c"
+  project "libmalloc_freelist"
     kind "StaticLib"
-    language "C"
-    targetdir (RESULTSROOT .. "c")
+    language "C++"
+    targetdir (RESULTSROOT .. "freelist")
     targetname "malloc"
 
     local SourceDir = ROOT .. "src/";
@@ -56,8 +56,8 @@ workspace "EmbeddedArtistry libmalloc"
     files
     {
       SourceDir .. "**.h",
-      SourceDir .. "**.c",
       LibDir .. "**.h",
+      SourceDir .. "malloc_freelist.c"
     }
 
     buildoptions {"-fno-builtin", "-nodefaultlibs"}
@@ -83,10 +83,10 @@ workspace "EmbeddedArtistry libmalloc"
 
     }
 
-  project "libmalloc_cpp"
+  project "libmalloc_threadx"
     kind "StaticLib"
     language "C++"
-    targetdir (RESULTSROOT .. "cpp")
+    targetdir (RESULTSROOT .. "threadx")
     targetname "malloc"
 
     local SourceDir = ROOT .. "src/";
@@ -94,8 +94,8 @@ workspace "EmbeddedArtistry libmalloc"
     files
     {
       SourceDir .. "**.h",
-      SourceDir .. "**.c",
       LibDir .. "**.h",
+      SourceDir .. "malloc_threadx.c"
     }
 
     buildoptions {"-fno-builtin", "-nodefaultlibs"}
@@ -107,6 +107,7 @@ workspace "EmbeddedArtistry libmalloc"
     {
       SourceDir,
       LibDir,
+      ROOT .. "rtos/",
       "/usr/local/opt/llvm/include",
       "/usr/local/opt/llvm/include/c++/v1/"
     }
