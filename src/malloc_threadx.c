@@ -1,3 +1,8 @@
+/*
+* Copyright © 2017 Embedded Artistry LLC.
+* License: MIT. See LICENSE file for details.
+*/
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <assert.h>

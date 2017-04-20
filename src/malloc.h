@@ -1,3 +1,8 @@
+/*
+* Copyright © 2017 Embedded Artistry LLC.
+* License: MIT. See LICENSE file for details.
+*/
+
 #ifndef __MALLOC_H_
 #define __MALLOC_H_
 
