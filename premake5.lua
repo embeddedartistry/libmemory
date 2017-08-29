@@ -52,7 +52,7 @@ workspace "Embedded Artistry libmalloc"
     targetname "malloc"
 
     local SourceDir = ROOT .. "src/";
-    local LibDir = ROOT .. "lib/"
+    local LibDir = ROOT .. "dependencies/lib/"
     files
     {
       SourceDir .. "**.h",
@@ -90,7 +90,7 @@ workspace "Embedded Artistry libmalloc"
     targetname "malloc"
 
     local SourceDir = ROOT .. "src/";
-    local LibDir = ROOT .. "lib/"
+    local LibDir = ROOT .. "dependencies/lib/"
     files
     {
       SourceDir .. "**.h",
@@ -107,7 +107,7 @@ workspace "Embedded Artistry libmalloc"
     {
       SourceDir,
       LibDir,
-      ROOT .. "rtos/",
+      ROOT .. "dependencies/rtos/",
       "/usr/local/opt/llvm/include",
       "/usr/local/opt/llvm/include/c++/v1/"
     }
