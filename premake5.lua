@@ -4,15 +4,15 @@
 -- For reference, please refer to the premake wiki:
 -- https://github.com/premake/premake-core/wiki
 
-local arch_ = require "modules/arch"
+local arch_ = require "build/modules/arch"
 
-local ROOT = "../"
-local RESULTSROOT = "../buildresults/%{cfg.platform}_%{cfg.buildcfg}/"
+local ROOT = "./"
+local RESULTSROOT = ROOT .. "buildresults/%{cfg.platform}_%{cfg.buildcfg}/"
 
 --------------------------------
 --  WORKSPACE CONFIGURATION   --
 --------------------------------
-workspace "EmbeddedArtistry libmalloc"
+workspace "Embedded Artistry libmalloc"
   configurations { "debug", "release" }
   platforms      { "x86_64", "x86_32" }
 
