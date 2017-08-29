@@ -68,6 +68,7 @@ workspace "Embedded Artistry libmalloc"
     includedirs
     {
       SourceDir,
+      ROOT .. "include",
       LibDir,
       "/usr/local/opt/llvm/include",
       "/usr/local/opt/llvm/include/c++/v1/"
@@ -106,6 +107,7 @@ workspace "Embedded Artistry libmalloc"
     includedirs
     {
       SourceDir,
+      ROOT .. "include/",
       LibDir,
       ROOT .. "dependencies/rtos/",
       "/usr/local/opt/llvm/include",
