@@ -3,9 +3,9 @@
 * License: MIT. See LICENSE file for details.
 */
 
-#include <stdint.h>
-#include <stdbool.h>
 #include <assert.h>
+#include <stdbool.h>
+#include <stdint.h>
 #include <threadx/tx_api.h>
 
 #pragma mark - Definitions -
@@ -38,7 +38,7 @@ volatile static bool initialized_ = false;
  * Size is passed to do_malloc and allocated to the caller
  */
 
-void malloc_addblock(void *addr, size_t size)
+void malloc_addblock(void* addr, size_t size)
 {
 	assert(addr && (size > 0));
 
@@ -48,18 +48,16 @@ void malloc_addblock(void *addr, size_t size)
 	* This is ThreadX's API to create a byte pool using a memory block.
 	* We are essentially just wrapping ThreadX APIs into a simpler form
 	*/
-	r = tx_byte_pool_create(&malloc_pool_, "Heap Memory Pool",
-			addr,
-			size);
+	r = tx_byte_pool_create(&malloc_pool_, "Heap Memory Pool", addr, size);
 	assert(r == TX_SUCCESS);
 
-	//Signal to any threads waiting on do_malloc that we are done
+	// Signal to any threads waiting on do_malloc that we are done
 	initialized_ = true;
 }
 
-void * malloc(size_t size)
+void* malloc(size_t size)
 {
-	void * ptr = NULL;
+	void* ptr = NULL;
 
 	/**
 	* Since multiple threads could be racing to malloc, if we lost the race
@@ -76,20 +74,21 @@ void * malloc(size_t size)
 		// We simply wrap the threadX call into a standard form
 		uint8_t r = tx_byte_allocate(&malloc_pool_, &ptr, size, TX_WAIT_FOREVER);
 
-		//I add the string to provide a more helpful error output.  It's value is always true.
+		// I add the string to provide a more helpful error output.  It's value is always true.
 		assert(r == TX_SUCCESS && "malloc failed");
-	} //else NULL if there was an error
+	} // else NULL if there was an error
 
 	return ptr;
 }
 
-void free(void * ptr)
+void free(void* ptr)
 {
-	//free should NEVER be called before malloc is init'd
+	// free should NEVER be called before malloc is init'd
 	assert(initialized_);
 
-	if(ptr) {
-		//We simply wrap the threadX call into a standard form
+	if(ptr)
+	{
+		// We simply wrap the threadX call into a standard form
 		uint8_t r = tx_byte_release(ptr);
 		ptr = NULL;
 		assert(r == TX_SUCCESS);
