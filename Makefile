@@ -32,7 +32,7 @@ regen:
 
 .PHONY: format
 format:
-	@tools/format/clang-format-all.sh
+	@tools/clang-format-libmemory.sh
 
 .PHONY : format-diff
 format-diff :
