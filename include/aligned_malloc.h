@@ -6,6 +6,8 @@
 #ifndef ALIGNED_MALLOC_H_
 #define ALIGNED_MALLOC_H_
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C"
 {
