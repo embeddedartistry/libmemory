@@ -13,6 +13,13 @@ pipeline
         sh 'make'
       }
     }
+    stage('Format')
+    {
+      steps
+      {
+        clangFormat()
+      }
+    }
   }
   post
   {

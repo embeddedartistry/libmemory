@@ -15,7 +15,7 @@ extern "C" {
 /**
 * Initialize malloc with a memory address and pool size
 */
-void malloc_addblock(void *addr, size_t size);
+void malloc_addblock(void* addr, size_t size);
 
 #ifdef __cplusplus
 }

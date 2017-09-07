@@ -40,3 +40,7 @@ format:
 .PHONY : format-diff
 format-diff :
 	@tools/format/clang-format-git-diff.sh
+
+.PHONY : format-check
+format-check :
+	@tools/clang-format-libmemory-patch.sh
