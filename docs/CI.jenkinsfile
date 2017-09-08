@@ -5,12 +5,6 @@ pipeline
 {
   agent any
 
-  /*
-  * This job does not have a GitHub configuration,
-  * so we need to create a dummy config
-  */
-  githubSetConfig('071d3edb-f301-4d66-ba08-e7f5b700d2f4')
-
   stages
   {
     stage('Build')
@@ -36,6 +30,12 @@ pipeline
     }
     failure
     {
+      /*
+      * This job does not have a GitHub configuration,
+      * so we need to create a dummy config
+      */
+      githubSetConfig('071d3edb-f301-4d66-ba08-e7f5b700d2f4')
+
       githubFileIssue()
     }
   }
