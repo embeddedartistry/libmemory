@@ -52,7 +52,7 @@ void* aligned_malloc(size_t align, size_t size)
 		 * We know we have to fit an offset value
 		 * We also allocate extra bytes to ensure we can meet the alignment
 		 */
-		uint32_t hdr_size = PTR_OFFSET_SZ + (align - 1);
+		uint32_t hdr_size = PTR_OFFSET_SZ + (align - 1)
 		void* p = malloc(size + hdr_size);
 
 		if(p)
