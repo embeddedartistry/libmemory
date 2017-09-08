@@ -25,9 +25,9 @@
 typedef struct
 {
 	ll_t node;
-	size_t size;
-	char* block;
-} alloc_node_t;
+	size_t size
+	char* block
+} alloc_node_t
 
 /**
 * We vend a memory address to the user.  This lets us translate back and forth
