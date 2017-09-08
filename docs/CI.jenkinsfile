@@ -1,5 +1,5 @@
 #!groovy
-@Library('jenkins-pipeline-lib') _
+@Library('jenkins-pipeline-lib@pj/issue') _
 
 pipeline
 {
@@ -26,6 +26,10 @@ pipeline
     always
     {
       sendNotifications(currentBuild.result,currentBuild.changeSets)
+    }
+    failure
+    {
+      githubFileIssue()
     }
   }
 }
