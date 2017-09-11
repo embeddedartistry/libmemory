@@ -4,6 +4,7 @@
 pipeline
 {
   agent any
+
   stages
   {
     stage('Build')
@@ -26,6 +27,16 @@ pipeline
     always
     {
       sendNotifications(currentBuild.result,currentBuild.changeSets)
+    }
+    failure
+    {
+      /*
+      * This job does not have a GitHub configuration,
+      * so we need to create a dummy config
+      */
+      githubSetConfig('4c01f168-ca25-483e-bc6d-8d105fc5fb70')
+
+      githubFileIssue()
     }
   }
 }
