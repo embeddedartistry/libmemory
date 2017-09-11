@@ -1,5 +1,5 @@
 #!groovy
-@Library('jenkins-pipeline-lib@pj/fix') _
+@Library('jenkins-pipeline-lib') _
 
 pipeline
 {
