@@ -34,7 +34,7 @@ pipeline
       {
         failure
         {
-          sendNotifications 'ARCHIVE_ERROR'
+          slackNotify 'ARCHIVE_ERROR'
         }
       }
     }
