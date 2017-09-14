@@ -57,7 +57,8 @@ workspace "Embedded Artistry libmalloc"
     {
       SourceDir .. "**.h",
       LibDir .. "**.h",
-      SourceDir .. "malloc_freelist.c"
+      SourceDir .. "malloc_freelist.c",
+      SourceDir .. "aligned_malloc.c"
     }
 
     buildoptions {"-fno-builtin", "-nodefaultlibs"}
@@ -96,7 +97,8 @@ workspace "Embedded Artistry libmalloc"
     {
       SourceDir .. "**.h",
       LibDir .. "**.h",
-      SourceDir .. "malloc_threadx.c"
+      SourceDir .. "malloc_threadx.c",
+      SourceDir .. "aligned_malloc.c"
     }
 
     buildoptions {"-fno-builtin", "-nodefaultlibs"}
