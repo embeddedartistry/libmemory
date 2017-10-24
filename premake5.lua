@@ -45,11 +45,11 @@ workspace "Embedded Artistry libmalloc"
 
   filter {} -- clear filter when you know you no longer need it!
 
-  project "libmalloc_freelist"
+  project "libmemory_freelist"
     kind "StaticLib"
-    language "C++"
+    language "C"
     targetdir (RESULTSROOT .. "freelist")
-    targetname "malloc"
+    targetname "memory"
 
     local SourceDir = ROOT .. "src/";
     local LibDir = ROOT .. "dependencies/lib/"
@@ -85,11 +85,11 @@ workspace "Embedded Artistry libmalloc"
 
     }
 
-  project "libmalloc_threadx"
+  project "libmemory_threadx"
     kind "StaticLib"
-    language "C++"
+    language "C"
     targetdir (RESULTSROOT .. "threadx")
-    targetname "malloc"
+    targetname "memory"
 
     local SourceDir = ROOT .. "src/";
     local LibDir = ROOT .. "dependencies/lib/"
@@ -124,4 +124,45 @@ workspace "Embedded Artistry libmalloc"
     links
     {
 
+    }
+
+project "libmemory_freelist_UnitTests"
+    kind "ConsoleApp"
+    language "C"
+    targetdir (RESULTSROOT .. "test/")
+    targetname "libmemory_freelist.bin"
+
+    --Temporary
+    removeplatforms { "X86_32" }
+
+    local SourceDir = ROOT .. "test/";
+
+    files
+    {
+      SourceDir .. "**.h",
+      SourceDir .. "**.c",
+    }
+
+    filter {} -- clear filter!
+
+    includedirs
+    {
+      SourceDir,
+      ROOT .. "include",
+      ROOT .. "test/cmocka/",
+      LibDir,
+      "/usr/local/opt/llvm/include",
+      "/usr/local/opt/llvm/include/c++/v1/"
+    }
+
+    -- Library Dependencies
+    libdirs
+    {
+      arch_.lib() .. "cmocka"
+    }
+
+    links
+    {
+      "libmemory_freelist",
+      "cmocka"
     }

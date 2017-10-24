@@ -44,3 +44,12 @@ format-diff :
 .PHONY : format-check
 format-check :
 	@tools/clang-format-libmemory-patch.sh
+
+.PHONY: test
+test: build
+ifeq ("$(wildcard buildresults/testresults/)","")
+	@mkdir -p buildresults/testresults
+else
+	@rm -f buildresults/testresults/*
+endif
+	@CMOCKA_XML_FILE=buildresults/testresults/%g.xml buildresults/x86_64_debug/test/libmemory_freelist.bin

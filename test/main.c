@@ -1,0 +1,38 @@
+/*
+* Copyright © 2017 Embedded Artistry LLC.
+* License: MIT. See LICENSE file for details.
+*/
+
+#include <support/memory.h>
+
+// CMocka needs these
+// clang-format off
+#include <setjmp.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <cmocka/cmocka.h>
+// clang-format on
+
+extern int malloc_tests(void);
+extern int aligned_malloc_tests(void);
+
+int main(void)
+{
+	int overall_result = 0;
+
+	// Generate JUnit results
+	cmocka_set_message_output(CM_OUTPUT_XML);
+
+	/*
+	* For this test framework, we need to allocate a block of memory before
+	* we run cmocka commands, otherwise they will fail since malloc cannot
+	* allocate anything
+	*/
+	allocate_memory();
+
+	overall_result |= malloc_tests();
+
+	overall_result |= aligned_malloc_tests();
+
+	return overall_result;
+}
