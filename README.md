@@ -2,7 +2,7 @@
 
 Embedded Artistry's `libmalloc` is a memory management library for embedded systems. This library provides various implemetations of the `malloc()` and `free()` functions. Other useful memory functions, such as generating aligned memory (`aligned_memory()`) are included in this library as well.
 
-This library is meant to be coupled with the [Embedded Artistry `libc` library][1]. The definitions for `malloc()` and `free()` are included inside `libc` rather than `libmemory`.
+This library is meant to be coupled with the [Embedded Artistry `libc` library][1]. The header definitions for `malloc()` and `free()` are included inside `libc` rather than `libmemory`.
 
 # Requirements
 
