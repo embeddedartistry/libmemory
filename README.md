@@ -73,8 +73,14 @@ make doc
 
 Documentation can be found in `buildresults/doc`, and the root page is `index.html`.
 
+# Need help?
+
+If you need further assistance or have any questions, please [file a GitHub Issue][6] or send us an email using the [Embedded Artistry Contact Form][5].
+
 [0]: http://www.stack.nl/~dimitri/doxygen/
 [1]: https://github.com/embeddedartistry/libc
 [2]: https://clang.llvm.org/docs/ClangFormat.html
 [3]: https://cmocka.org
 [4]: https://github.com/premake/premake-core/wiki
+[5]: http://embeddedartistry.com/contact
+[6]: https://github.com/embeddedartistry/libmemory/issues/new
