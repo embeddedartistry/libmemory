@@ -3,7 +3,7 @@
 # Export all args to act as a passthrough
 export
 
-all: build
+all: build test doc
 
 .PHONY: build_gen
 build_gen:
@@ -23,11 +23,13 @@ ifeq ("$(wildcard build/gen/)","")
 	@echo "No generated build files: skipping clean"
 else
 	@make -C build/gen/ clean
+	@rm -rf buildresults/
 endif
 
 .PHONY: purify
 purify: clean
 	@rm -rf build/gen
+	@rm -rf buildresults/
 
 .PHONY: regen
 regen:
