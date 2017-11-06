@@ -10,18 +10,16 @@
 
 #pragma mark - Definitions -
 
-/*
-* In this example, I am using the compiler's builtin atomic compare and swap
+/**
+* I am using the compiler's builtin atomic compare and swap
 * Routine. This will provide atomic access to swapping the malloc pointer,
 * and only one function will initialize the memory pool.
 */
 #define atomic_compare_and_swap __sync_val_compare_and_swap
 
-#pragma mark - Prototypes -
-
 #pragma mark - Declarations -
 
-// ThreadX internal memory pool stucture
+/// ThreadX internal memory pool stucture
 static TX_BYTE_POOL malloc_pool_ = {0};
 
 /*
@@ -32,20 +30,19 @@ volatile static bool initialized_ = false;
 
 #pragma mark - Private Functions -
 
-/*
- * init_malloc must be called before memory allocation calls are made
- * This sets up a byte pool for the heap using the defined HEAP_START and HEAP_END macros
- * Size is passed to do_malloc and allocated to the caller
+/**
+ * malloc_addblock must be called before memory allocation calls are made.
+ * In this ThreadX implementation, malloc() calls will block until memory
+ * has been allocated
  */
-
 void malloc_addblock(void* addr, size_t size)
 {
 	assert(addr && (size > 0));
 
 	uint8_t r;
 
-	/**
-	* This is ThreadX's API to create a byte pool using a memory block.
+	/*
+	* tx_byte_pool_create is ThreadX's API to create a byte pool using a memory block.
 	* We are essentially just wrapping ThreadX APIs into a simpler form
 	*/
 	r = tx_byte_pool_create(&malloc_pool_, "Heap Memory Pool", addr, size);
@@ -60,9 +57,9 @@ void* malloc(size_t size)
 	void* ptr = NULL;
 
 	/**
-	* Since multiple threads could be racing to malloc, if we lost the race
-	* we need to make sure the ThreadX pool has been created before we
-	* try to allocate memory, or there will be an error
+	* In the ThreadX implementaiton, we make sure the ThreadX pool has been
+	* created before we try to allocate memory, or there will be an error.
+	* We sleep our threads until memory has been added.
 	*/
 	while(!initialized_)
 	{
@@ -83,7 +80,7 @@ void* malloc(size_t size)
 
 void free(void* ptr)
 {
-	// free should NEVER be called before malloc is init'd
+	/// free should NEVER be called before malloc is init'd
 	assert(initialized_);
 
 	if(ptr)

@@ -6,15 +6,11 @@
 #include <assert.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "aligned_malloc.h"
 #include "malloc.h"
 
-/**
-* Definitions
-*/
 #pragma mark - Definitions -
 
 /**
@@ -25,18 +21,16 @@
 #define align_up(num, align) (((num) + ((align)-1)) & ~((align)-1))
 #endif
 
-// Number of bytes we're using for storing the aligned pointer offset
+/// Number of bytes we're using for storing the aligned pointer offset
 typedef uint16_t offset_t;
+
+/// Macro for accessing the size of our current pointer offset
 #define PTR_OFFSET_SZ sizeof(offset_t)
 
-/**
-* APIs
-*/
 #pragma mark - APIs -
 
 /**
-* aligned_malloc takes in the requested alignment and size
-*	We will call malloc with extra bytes for our header and the offset
+* We will call malloc with extra bytes for our header and the offset
 *	required to guarantee the desired alignment.
 */
 void* aligned_malloc(size_t align, size_t size)
