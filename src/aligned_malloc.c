@@ -35,7 +35,7 @@ typedef uint16_t offset_t;
 */
 void* aligned_malloc(size_t align, size_t size)
 {
-	void* ptr = NULL;
+	void* ptr = NULL
 
 	// We want it to be a power of two since align_up operates on powers of two
 	assert((align & (align - 1)) == 0);
