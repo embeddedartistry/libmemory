@@ -27,7 +27,7 @@ else
 endif
 
 .PHONY: purify
-purify: clean
+purify:
 	@rm -rf build/gen
 	@rm -rf buildresults/
 
