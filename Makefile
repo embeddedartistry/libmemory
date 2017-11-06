@@ -33,6 +33,10 @@ purify: clean
 regen:
 	@build/bin/premake5 --file=premake5.lua gmake
 
+.PHONY: doc
+doc:
+	@doxygen docs/Doxyfile
+
 .PHONY: format
 format:
 	@tools/clang-format-libmemory.sh
