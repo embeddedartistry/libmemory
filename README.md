@@ -1,15 +1,74 @@
 # libmalloc
 
-Embedded Artistry's `libmalloc` is a memory management library for embedded systems. This library provides various implemetations of the `malloc()` and `free()` functions. Other useful memory functions, such as generating aligned memory (`aligned_memory()`) are included in this library as well.
+Embedded Artistry's `libmalloc` is a memory management library for embedded systems. If you have a bare metal system and want to use `malloc()`, this library is for you!
 
-This library is meant to be coupled with the [Embedded Artistry `libc` library][1]. The header definitions for `malloc()` and `free()` are included inside `libc` rather than `libmemory`.
+`libmemory` provides various implemetations of the `malloc()` and `free()` functions. The primary malloc implementation is a freelist allocator which can be used on a bare-metal system. Wrappers for some RTOSes are also provided (and can be added if not already). You wil also find other useful memory functions, such as `aligned_malloc()`.
 
-# Requirements
+This library is meant to be coupled with a `libc` implementation (such as the [Embedded Artistry `libc`][1]). `malloc()` and `free()` are not redefined in these headers, so you can safely use this library with your platform's existing `libc`.
+
+[![Build Status](http://136.24.14.137:12345/buildStatus/icon?job=ea-nightly/libmemory/master)](http://136.24.14.137:12345/job/ea-nightly/libmemory/master)
+
+## Table of Contents
+
+1. [About the Project](#about-the-project)
+1. [Project Status](#project-status)
+1. [Getting Started](#getting-started)
+	1. [Requirements](#requirements)
+	1. [Building](#building)
+	1. [Installation](#installation)
+	1. [Usage](#usage)
+1. [Release Process](#release-process)
+	1. [Versioning](#versioning)
+
+# About the Project
+
+This library is meant to allow developers of embedded systems to utilize the `malloc()` and `free()` functions if their platform does not currently support it. The baseline `malloc()` implementation can be used without an RTOS or any other supporting software. Only a block of memory needs to be assigned.
+
+Many RTOSes provide dynamic memory allocation functionality, but these functions are not typically called `malloc()` and `free()`. Wrappers can be provdied for these RTOSes to improve code portability.
+
+A block of memory needs to be initially assigned using the `malloc_addblock()` function. This tells the malloc implementation what memory address and size to use for the heap.
+
+```
+// Allocate 4MB to the heap starting at memory address 0xDEADBEEF
+malloc_addblock(0xDEADBEEF, 4 * 1024 * 1024);
+```
+
+One memory has been allcated to the heap, you can use `malloc()` and `free()` as expected.
+
+# Project Status
+
+[![Build Status](http://136.24.14.137:12345/buildStatus/icon?job=ea-nightly/libmemory/master)](http://136.24.14.137:12345/job/ea-nightly/libmemory/master)
+
+* Basic memory allocation is implemented using the free-list strategy
+* Cross-compiling with the Premake buildsystem is currently not implemented.
+* Only the ThreadX RTOS has currenetly been added
+	* FreeRTOS is next on the list
+* Tests are currently in place for `malloc()`, `free()`, `aligned_malloc()`, and `aligned_free()`
+* The ThreadX malloc implementation is not tested
+* No test for overlapping memory blocks exists
+
+# Getting Started
+
+## Requirements
 
 * [Doxygen][0] must be installed to generate documentation
-* [Premake][4] is used as the buildsystem. Binaries are included for common platforms, but if yours is not natively supported please download a binary from the website.
+* [Premake][4] is used as the buildsystem
+	* Binaries are included for Windows, Linux, and OSX
+	* If yours is not natively supported please download a binary from the website or file a GitHub issue so I can help
+* [`git-lfs`][7] is used to store binary files
+* `make` and `gcc` should be installed in order to compile the files
 
-# Building
+## Getting the Source
+
+This project uses `git-lfs`, so please install it before cloning. If you cloned prior to installing `git-lfs`, simply run `git lfs pull` after installation.
+
+This project is [hosted on GitHub][8]. You can clone the project directly using this command:
+
+```
+git clone --recursive git@github.com:embeddedartistry/libmemory.git
+```
+
+## Building
 
 The library can be built by issuing the following command:
 
@@ -31,11 +90,27 @@ And you can completely eliminate the generated `Makefile`s and buildresults usin
 make purify
 ```
 
-# Cross-compiling
+## Installation
+
+### Copying Artifacts Into Your Project
+
+Copy the `include/` directory contents into your source tree.
+
+Build artifacts are stored in the `buildresults` folder. There is a sub-folder for the target architecture (e.g. `x86_64`). Inside of this architecture you will find folders for ach type of `malloc` allocator (freelist, threadx, etc.), and a static library will be contained there.
+
+Copy the desired library to your project and add the library to your link step.
+
+Example linker flags:
+
+```
+-lmemory -Lpath/to/libmemory.a
+```
+
+### Cross-compiling
 
 Output is currently limited to `x86_64`, but cross-compiling for ARM will be implemented in the near future.
 
-# Testing
+## Testing
 
 The tests for this library are written with [CMocka][3]. You can run the tests by issuing the following command:
 
@@ -84,3 +159,5 @@ If you need further assistance or have any questions, please [file a GitHub Issu
 [4]: https://github.com/premake/premake-core/wiki
 [5]: http://embeddedartistry.com/contact
 [6]: https://github.com/embeddedartistry/libmemory/issues/new
+[7]: https://git-lfs.github.com
+[8]: https://github.com/embeddedartistry/libmemory
