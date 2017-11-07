@@ -178,7 +178,9 @@ Formatting is enforced by the Jenkins build server which runs continuous integra
 
 # Documentation
 
-Documentation can be built by running the following command:
+[Documentation for the latest release can always be found here][9].
+
+Documentation can be built locally by running the following command:
 
 ```
 make doc
@@ -193,6 +195,10 @@ If you need further assistance or have any questions, please [file a GitHub Issu
 # Contributing
 
 I am currently working on Contributing guidelines. In the meantime, please open an issue to discuss any contributions you'd like to make.
+
+# Further Reading
+
+* [`libmemory` Documenation][9]
 
 # Authors
 
@@ -217,3 +223,4 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 [6]: https://github.com/embeddedartistry/libmemory/issues/new
 [7]: https://git-lfs.github.com
 [8]: https://github.com/embeddedartistry/libmemory
+[9]: https://embeddedartistry.github.io/libmemory/index.html
