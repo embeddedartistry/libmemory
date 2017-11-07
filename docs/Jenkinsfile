@@ -59,7 +59,9 @@ pipeline
         sh 'make doc'
       }
     }
-    steps
+    stage('Archive')
+    {
+      steps
       {
         echo 'Generating Archive'
         sh 'zip -qr buildresults/libmemory_${BUILD_NUMBER}.zip include/ buildresults/**/freelist/ buildresults/**/threadx/ buildresults/doc/'
@@ -69,12 +71,6 @@ pipeline
         {
           archiveArtifacts 'libmemory_${BUILD_NUMBER}.zip'
         }
-      }
-    stage('Archive')
-    {
-      steps
-      {
-        archiveArtifacts 'buildresults/**/*'
       }
       post
       {
