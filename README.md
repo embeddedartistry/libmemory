@@ -1,8 +1,8 @@
-# libmalloc
+# libmemory
 
 [![Build Status](http://136.24.14.137:12345/buildStatus/icon?job=ea-nightly/libmemory/master)](http://136.24.14.137:12345/job/ea-nightly/libmemory/master)
 
-Embedded Artistry's `libmalloc` is a memory management library for embedded systems. If you have a bare metal system and want to use `malloc()`, this library is for you!
+Embedded Artistry's `libmemory` is a memory management library for embedded systems. If you have a bare metal system and want to use `malloc()`, this library is for you!
 
 `libmemory` provides various implemetations of the `malloc()` and `free()` functions. The primary malloc implementation is a freelist allocator which can be used on a bare-metal system. Wrappers for some RTOSes are also provided (and can be added if not already). You wil also find other useful memory functions, such as `aligned_malloc()`.
 
