@@ -1,12 +1,12 @@
 # libmalloc
 
+[![Build Status](http://136.24.14.137:12345/buildStatus/icon?job=ea-nightly/libmemory/master)](http://136.24.14.137:12345/job/ea-nightly/libmemory/master)
+
 Embedded Artistry's `libmalloc` is a memory management library for embedded systems. If you have a bare metal system and want to use `malloc()`, this library is for you!
 
 `libmemory` provides various implemetations of the `malloc()` and `free()` functions. The primary malloc implementation is a freelist allocator which can be used on a bare-metal system. Wrappers for some RTOSes are also provided (and can be added if not already). You wil also find other useful memory functions, such as `aligned_malloc()`.
 
 This library is meant to be coupled with a `libc` implementation (such as the [Embedded Artistry `libc`][1]). `malloc()` and `free()` are not redefined in these headers, so you can safely use this library with your platform's existing `libc`.
-
-[![Build Status](http://136.24.14.137:12345/buildStatus/icon?job=ea-nightly/libmemory/master)](http://136.24.14.137:12345/job/ea-nightly/libmemory/master)
 
 ## Table of Contents
 
@@ -194,17 +194,15 @@ If you need further assistance or have any questions, please [file a GitHub Issu
 
 I am currently working on Contributing guidelines. In the meantime, please open an issue to discuss any contributions you'd like to make.
 
-**[Back to top](#table-of-contents)**
-
 # Authors
 
-* **[Phillip Johnston](https://github.com/phillipjohnston)** - *Initial work* - [Embedded Artistry](https://github.com/embeddedartistry)
+* **[Phillip Johnston](https://github.com/phillipjohnston)** - original library author - [Embedded Artistry](https://github.com/embeddedartistry)
 
 # License
 
 Copyright (c) 2017 Embedded Artistry LLC
 
-This project is licensed under the MIT License - see [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the MIT License - see [LICENSE](LICENSE) file for details.
 
 # Acknowledgments
 
