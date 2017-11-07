@@ -90,9 +90,13 @@ And you can completely eliminate the generated `Makefile`s and buildresults usin
 make purify
 ```
 
+### Cross-compiling
+
+Output is currently limited to `x86_64`, but cross-compiling for ARM will be implemented in the near future.
+
 ## Installation
 
-### Copying Artifacts Into Your Project
+Currently the best method to use this project is to build it separately and copy the contents into your tree. I will improve this method to allow easier usage as a submodule.
 
 Copy the `include/` directory contents into your source tree.
 
@@ -106,9 +110,43 @@ Example linker flags:
 -lmemory -Lpath/to/libmemory.a
 ```
 
-### Cross-compiling
+## Usage
 
-Output is currently limited to `x86_64`, but cross-compiling for ARM will be implemented in the near future.
+A block of memory needs to be initially assigned using the `malloc_addblock()` function:
+
+```
+void malloc_addblock(void* addr, size_t size);
+```
+
+
+This tells the malloc implementation what memory address and size to use for the heap.
+
+```
+// Allocate 4MB to the heap starting at memory address 0xDEADBEEF
+malloc_addblock(0xDEADBEEF, 4 * 1024 * 1024);
+```
+
+`malloc()` and `free()` will fail (return `NULL`) if no memory has been allocated. Once memory has been allocated to the heap, you can use `malloc()` and `free()` as expected.
+
+Multiple blocks of memory can be added using `malloc_addblock()`. The memory blocks do not have to be contiguous.
+
+## Aligned Malloc
+
+You can allocate aligned memory using `aligned_malloc()`:
+
+```
+void* aligned_malloc(size_t align, size_t size);
+```
+
+Alignment must be a power of two!
+
+Aligned memory can only be free'd using `aligned_free()`:
+
+```
+void aligned_free(void* ptr);
+```
+
+For more information, see `aligned_memory.h` and the generated documentation.
 
 ## Testing
 
@@ -151,6 +189,26 @@ Documentation can be found in `buildresults/doc`, and the root page is `index.ht
 # Need help?
 
 If you need further assistance or have any questions, please [file a GitHub Issue][6] or send us an email using the [Embedded Artistry Contact Form][5].
+
+# Contributing
+
+I am currently working on Contributing guidelines. In the meantime, please open an issue to discuss any contributions you'd like to make.
+
+**[Back to top](#table-of-contents)**
+
+# Authors
+
+* **[Phillip Johnston](https://github.com/phillipjohnston)** - *Initial work* - [Embedded Artistry](https://github.com/embeddedartistry)
+
+# License
+
+Copyright (c) 2017 Embedded Artistry LLC
+
+This project is licensed under the MIT License - see [LICENSE.md](LICENSE.md) file for details.
+
+# Acknowledgments
+
+**[Back to top](#table-of-contents)**
 
 [0]: http://www.stack.nl/~dimitri/doxygen/
 [1]: https://github.com/embeddedartistry/libc
