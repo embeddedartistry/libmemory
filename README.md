@@ -146,7 +146,7 @@ Aligned memory can only be free'd using `aligned_free()`:
 void aligned_free(void* ptr);
 ```
 
-For more information, see `aligned_memory.h` and the generated documentation.
+For more information, see `aligned_memory.h`and [the documentation][10].
 
 ## Testing
 
@@ -224,3 +224,4 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 [7]: https://git-lfs.github.com
 [8]: https://github.com/embeddedartistry/libmemory
 [9]: https://embeddedartistry.github.io/libmemory/index.html
+[10]: https://embeddedartistry.github.io/libmemory/d6/dfa/aligned__malloc_8h.html
