@@ -50,6 +50,9 @@ regen:
 
 .PHONY: doc
 doc:
+ifeq ("$(wildcard buildresults/doc/)","")
+	@mkdir -p buildresults/doc
+endif
 	@doxygen docs/Doxyfile
 
 .PHONY: format
