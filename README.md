@@ -194,7 +194,7 @@ I am currently working on Contributing guidelines. In the meantime, please open 
 
 # Further Reading
 
-* [`libmemory` Documenation][9]
+* [`libmemory` Documentation][9]
 
 # Authors
 
