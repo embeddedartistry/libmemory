@@ -9,13 +9,13 @@ This library is meant to be coupled with a `libc` implementation (such as the [E
 ## Table of Contents
 
 1. [About the Project](#about-the-project)
-1. [Project Status](#project-status)
-1. [Getting Started](#getting-started)
+2. [Project Status](#project-status)
+3. [Getting Started](#getting-started)
 	1. [Requirements](#requirements)
-	1. [Building](#building)
-	1. [Installation](#installation)
-	1. [Usage](#usage)
-1. [Release Process](#release-process)
+	2. [Building](#building)
+	3. [Installation](#installation)
+	4. [Usage](#usage)
+4. [Release Process](#release-process)
 	1. [Versioning](#versioning)
 
 # About the Project
