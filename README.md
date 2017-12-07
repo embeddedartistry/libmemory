@@ -190,11 +190,12 @@ If you need further assistance or have any questions, please [file a GitHub Issu
 
 # Contributing
 
-I am currently working on Contributing guidelines. In the meantime, please open an issue to discuss any contributions you'd like to make.
+If you are intersted in contributing to this project, please read our [contributing guidelines](docs/CONTRIBUTING.md).
 
 # Further Reading
 
 * [`libmemory` Documentation][9]
+* [CONTRIBUTING guide](docs/CONTRIBUTING.md)
 
 # Authors
 
