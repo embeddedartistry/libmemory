@@ -192,11 +192,11 @@ This project uses CMocka as the testing framework.
 
 Please follow these guidelines:
 
-* New tests should be added to the [`test/src/`](test/src) directory tree
+* New tests should be added to the [`test/src/`](../test/src) directory tree
 * Each function should have its own tests in its own C file.
 * When adding a new test, add the following to the relevant test coordination file:
-	* Add an `extern` function declaration in [main.c](test/main.c): `extern int ctype_tests(void);`
-	* Add a call to the test coordinator in [main.c](test/main.c): `overall_result |= ctype_tests();`
+	* Add an `extern` function declaration in [main.c](../test/main.c): `extern int ctype_tests(void);`
+	* Add a call to the test coordinator in [main.c](../test/main.c): `overall_result |= ctype_tests();`
 
 ### Style Guidelines
 
