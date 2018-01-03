@@ -6,33 +6,57 @@
 #include <assert.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
+/**
+* NOTE: This FreeRTOS malloc implementation requires heap_5.c
+*
+* Please define the correct heap_region for your project.
+*/
+
+#pragma mark - Definitions
+
+/**
+* Your application can define this macro to increase the
+*/
+#ifndef FREERTOS_HEAP_REGION_CNT
+#define FREERTOS_HEAP_REGION_CNT 2
+#endif
+
 #pragma mark - Declarations -
 
-/** FreeRTOS internal memory pool stucture when using heap_5.c
-*
-* Allocates two blocks of RAM for use by the heap.
-*	The first is a block of 0x10000 bytes starting from address 0x80000000
-*	The second is left open to demonstrate configuration with malloc_addblock
+/// Maximum number of heap regions that can be specified
+static const uint8_t heap_region_max = FREERTOS_HEAP_REGION_CNT;
+
+/// Current number of allocated heap regions
+static volatile uint8_t heap_region_cnt = 0;
+
+/**
+* FreeRTOS internal memory pool stucture when using heap_5.c
 *
 * The block with the lowest starting address should appear first in the array
+*
+* An additional block is allocated to serve as a NULL terminator
 */
-static HeapRegion_t heap_regions[] =
-{
-    { ( uint8_t * ) 0x80000000UL, 0x10000 }, //Fixed definition
-    { NULL, 0 }, // Will be updated by malloc_addblock
-    { NULL, 0 } // NULL terminate
-};
+static HeapRegion_t heap_regions[FREERTOS_HEAP_REGION_CNT + 1] = {0};
 
-/*
-* Flag that is used in do_malloc() to cause competing threads to wait until
+/**
+* Flag that is used in malloc() to cause competing threads to wait until
 * initialization is completed before allocating memory.
 */
 volatile static bool initialized_ = false;
 
 #pragma mark - Private Functions -
+
+static int cmp_heap(const void* a, const void* b)
+{
+	const HeapRegion_t *ua = a, *ub = b;
+
+	return ((ua->pucStartAddress < ub->pucStartAddress) ? -1 :
+		((ua->pucStartAddress != ub->pucStartAddress)));
+}
 
 /**
  * malloc_addblock must be called before memory allocation calls are made.
@@ -42,29 +66,29 @@ volatile static bool initialized_ = false;
 void malloc_addblock(void* addr, size_t size)
 {
 	assert(addr && (size > 0));
+	assert((heap_region_cnt < heap_region_max) && "Too many heap regions!");
 
-	if((uintptr_t)addr > (uintptr_t) heap_regions[0].pucStartAddress)
+	uint8_t cnt = heap_region_cnt++;
+
+	heap_regions[cnt].pucStartAddress = (uint8_t *) addr;
+	heap_regions[cnt].xSizeInBytes = size;
+}
+
+void malloc_init()
+{
+	assert((heap_region_cnt > 0) && !initialized_);
+
+	if(heap_region_cnt > 0 && !initialized_)
 	{
-		// Address is greater than the pre-allocated address - all ok
-		heap_regions[1].pucStartAddress = (uint8_t*) addr;
-		heap_regions[1].xSizeInBytes = size;
+		// Sort the heap regions so addresses are in the correct order
+		qsort(heap_regions, heap_region_cnt, sizeof(HeapRegion_t), cmp_heap);
+
+		// Pass the array into vPortDefineHeapRegions() to enable malloc()
+		vPortDefineHeapRegions(heap_regions);
+
+		// Signal to any waiting threads that we are done initializing
+		initialized_ = true;
 	}
-	else
-	{
-		// Set the old block to the second slot
-		heap_regions[1].pucStartAddress = heap_regions[0].pucStartAddress
-		heap_regions[1].xSizeInBytes = heap_regions[0].xSizeInBytes;
-
-		// Now set the new block
-		heap_regions[0].pucStartAddress = (uint8_t*) addr;
-		heap_regions[0].xSizeInBytes = size;
-	}
-
-	// Pass the array into vPortDefineHeapRegions() to enable malloc()
-	vPortDefineHeapRegions(heap_regions);
-
-	// Signal to any waiting threads that we are done initializing
-	initialized_ = true;
 }
 
 void* malloc(size_t size)
