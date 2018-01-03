@@ -68,10 +68,20 @@ void malloc_addblock(void* addr, size_t size)
 	assert(addr && (size > 0));
 	assert((heap_region_cnt < heap_region_max) && "Too many heap regions!");
 
+	// Increment the count early to claim a spot in case of multi-threads
 	uint8_t cnt = heap_region_cnt++;
 
-	heap_regions[cnt].pucStartAddress = (uint8_t *) addr;
-	heap_regions[cnt].xSizeInBytes = size;
+	if(cnt < heap_region_max)
+	{
+		// We have space - add it to the table
+		heap_regions[cnt].pucStartAddress = (uint8_t *) addr;
+		heap_regions[cnt].xSizeInBytes = size;
+	}
+	else
+	{
+		// Decrement the count if we don't have space
+		heap_region_cnt--;
+	}
 }
 
 void malloc_init()
