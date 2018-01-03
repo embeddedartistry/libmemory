@@ -139,7 +139,7 @@ workspace "Embedded Artistry libmalloc"
     {
       SourceDir .. "**.h",
       LibDir .. "**.h",
-      SourceDir .. "malloc_threadx.c",
+      SourceDir .. "malloc_freertos.c",
       SourceDir .. "aligned_malloc.c"
     }
 
