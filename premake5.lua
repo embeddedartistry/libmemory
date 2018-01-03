@@ -126,6 +126,48 @@ workspace "Embedded Artistry libmalloc"
 
     }
 
+  project "libmemory_freertos"
+    kind "StaticLib"
+    language "C"
+    targetdir (RESULTSROOT .. "freertos")
+    targetname "memory"
+
+    local SourceDir = ROOT .. "src/";
+    local LibDir = ROOT .. "dependencies/lib/"
+
+    files
+    {
+      SourceDir .. "**.h",
+      LibDir .. "**.h",
+      SourceDir .. "malloc_threadx.c",
+      SourceDir .. "aligned_malloc.c"
+    }
+
+    buildoptions {"-fno-builtin", "-nodefaultlibs"}
+    linkoptions {"-nodefaultlibs", "-nostartfiles"}
+
+    filter {} -- clear filter!
+
+    includedirs
+    {
+      SourceDir,
+      ROOT .. "include/",
+      LibDir,
+      ROOT .. "dependencies/rtos/",
+      "/usr/local/opt/llvm/include",
+      "/usr/local/opt/llvm/include/c++/v1/"
+    }
+
+    libdirs
+    {
+
+    }
+
+    links
+    {
+
+    }
+
 project "libmemory_freelist_UnitTests"
     kind "ConsoleApp"
     language "C"
