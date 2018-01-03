@@ -8,22 +8,13 @@
 #include <stdint.h>
 #include <threadx/tx_api.h>
 
-#pragma mark - Definitions -
-
-/**
-* I am using the compiler's builtin atomic compare and swap
-* Routine. This will provide atomic access to swapping the malloc pointer,
-* and only one function will initialize the memory pool.
-*/
-#define atomic_compare_and_swap __sync_val_compare_and_swap
-
 #pragma mark - Declarations -
 
 /// ThreadX internal memory pool stucture
 static TX_BYTE_POOL malloc_pool_ = {0};
 
-/*
-* Flag that is used in do_malloc() to cause competing threads to wait until
+/**
+* Flag that is used in malloc() to cause competing threads to wait until
 * initialization is completed before allocating memory.
 */
 volatile static bool initialized_ = false;
