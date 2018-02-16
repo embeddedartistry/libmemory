@@ -1,7 +1,7 @@
 /*
-* Copyright © 2017 Embedded Artistry LLC.
-* License: MIT. See LICENSE file for details.
-*/
+ * Copyright © 2017 Embedded Artistry LLC.
+ * License: MIT. See LICENSE file for details.
+ */
 
 #include <assert.h>
 #include <stdbool.h>
@@ -14,9 +14,9 @@
 #pragma mark - Definitions -
 
 /**
-* Simple macro for making sure memory addresses are aligned
-* to the nearest power of two
-*/
+ * Simple macro for making sure memory addresses are aligned
+ * to the nearest power of two
+ */
 #ifndef align_up
 #define align_up(num, align) (((num) + ((align)-1)) & ~((align)-1))
 #endif
@@ -30,9 +30,9 @@ typedef uint16_t offset_t;
 #pragma mark - APIs -
 
 /**
-* We will call malloc with extra bytes for our header and the offset
-*	required to guarantee the desired alignment.
-*/
+ * We will call malloc with extra bytes for our header and the offset
+ *	required to guarantee the desired alignment.
+ */
 void* aligned_malloc(size_t align, size_t size)
 {
 	void* ptr = NULL;
@@ -67,23 +67,23 @@ void* aligned_malloc(size_t align, size_t size)
 }
 
 /**
-* aligned_free works like free(), but we work backwards from the returned
-* pointer to find the correct offset and pointer location to return to free()
-* Note that it is VERY BAD to call free() on an aligned_malloc() pointer.
-*/
+ * aligned_free works like free(), but we work backwards from the returned
+ * pointer to find the correct offset and pointer location to return to free()
+ * Note that it is VERY BAD to call free() on an aligned_malloc() pointer.
+ */
 void aligned_free(void* ptr)
 {
 	assert(ptr);
 
 	/*
-	* Walk backwards from the passed-in pointer to get the pointer offset
-	* We convert to an offset_t pointer and rely on pointer math to get the data
-	*/
+	 * Walk backwards from the passed-in pointer to get the pointer offset
+	 * We convert to an offset_t pointer and rely on pointer math to get the data
+	 */
 	offset_t offset = *((offset_t*)ptr - 1);
 
 	/*
-	* Once we have the offset, we can get our original pointer and call free
-	*/
+	 * Once we have the offset, we can get our original pointer and call free
+	 */
 	void* p = (void*)((uint8_t*)ptr - offset);
 	free(p);
 }

@@ -1,7 +1,7 @@
 /*
-* Copyright © 2017 Embedded Artistry LLC.
-* License: MIT. See LICENSE file for details.
-*/
+ * Copyright © 2017 Embedded Artistry LLC.
+ * License: MIT. See LICENSE file for details.
+ */
 
 #include <assert.h>
 #include <stdbool.h>
@@ -14,9 +14,9 @@
 static TX_BYTE_POOL malloc_pool_ = {0};
 
 /**
-* Flag that is used in malloc() to cause competing threads to wait until
-* initialization is completed before allocating memory.
-*/
+ * Flag that is used in malloc() to cause competing threads to wait until
+ * initialization is completed before allocating memory.
+ */
 volatile static bool initialized_ = false;
 
 #pragma mark - Private Functions -
@@ -33,9 +33,9 @@ void malloc_addblock(void* addr, size_t size)
 	uint8_t r;
 
 	/*
-	* tx_byte_pool_create is ThreadX's API to create a byte pool using a memory block.
-	* We are essentially just wrapping ThreadX APIs into a simpler form
-	*/
+	 * tx_byte_pool_create is ThreadX's API to create a byte pool using a memory block.
+	 * We are essentially just wrapping ThreadX APIs into a simpler form
+	 */
 	r = tx_byte_pool_create(&malloc_pool_, "Heap Memory Pool", addr, size);
 	assert(r == TX_SUCCESS);
 
@@ -48,10 +48,10 @@ void* malloc(size_t size)
 	void* ptr = NULL;
 
 	/**
-	* In the ThreadX implementaiton, we make sure the ThreadX pool has been
-	* created before we try to allocate memory, or there will be an error.
-	* We sleep our threads until memory has been added.
-	*/
+	 * In the ThreadX implementaiton, we make sure the ThreadX pool has been
+	 * created before we try to allocate memory, or there will be an error.
+	 * We sleep our threads until memory has been added.
+	 */
 	while(!initialized_)
 	{
 		tx_thread_sleep(1);

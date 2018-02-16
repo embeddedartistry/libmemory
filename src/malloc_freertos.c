@@ -1,26 +1,26 @@
 /*
-* Copyright © 2018 Embedded Artistry LLC.
-* License: MIT. See LICENSE file for details.
-*/
+ * Copyright © 2018 Embedded Artistry LLC.
+ * License: MIT. See LICENSE file for details.
+ */
 
 #include <assert.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
 
 /**
-* NOTE: This FreeRTOS malloc implementation requires heap_5.c
-*
-* Please define the correct heap_region for your project.
-*/
+ * NOTE: This FreeRTOS malloc implementation requires heap_5.c
+ *
+ * Please define the correct heap_region for your project.
+ */
 
 #pragma mark - Definitions
 
 /**
-* Your application can define this macro to increase the
-*/
+ * Your application can define this macro to increase the
+ */
 #ifndef FREERTOS_HEAP_REGION_CNT
 #define FREERTOS_HEAP_REGION_CNT 2
 #endif
@@ -34,18 +34,18 @@ static const uint8_t heap_region_max = FREERTOS_HEAP_REGION_CNT;
 static volatile uint8_t heap_region_cnt = 0;
 
 /**
-* FreeRTOS internal memory pool stucture when using heap_5.c
-*
-* The block with the lowest starting address should appear first in the array
-*
-* An additional block is allocated to serve as a NULL terminator
-*/
+ * FreeRTOS internal memory pool stucture when using heap_5.c
+ *
+ * The block with the lowest starting address should appear first in the array
+ *
+ * An additional block is allocated to serve as a NULL terminator
+ */
 static HeapRegion_t heap_regions[FREERTOS_HEAP_REGION_CNT + 1] = {0};
 
 /**
-* Flag that is used in malloc() to cause competing threads to wait until
-* initialization is completed before allocating memory.
-*/
+ * Flag that is used in malloc() to cause competing threads to wait until
+ * initialization is completed before allocating memory.
+ */
 volatile static bool initialized_ = false;
 
 #pragma mark - Private Functions -
@@ -54,8 +54,9 @@ static int cmp_heap(const void* a, const void* b)
 {
 	const HeapRegion_t *ua = a, *ub = b;
 
-	return ((ua->pucStartAddress < ub->pucStartAddress) ? -1 :
-		((ua->pucStartAddress != ub->pucStartAddress)));
+	return ((ua->pucStartAddress < ub->pucStartAddress)
+				? -1
+				: ((ua->pucStartAddress != ub->pucStartAddress)));
 }
 
 /**
@@ -74,7 +75,7 @@ void malloc_addblock(void* addr, size_t size)
 	if(cnt < heap_region_max)
 	{
 		// We have space - add it to the table
-		heap_regions[cnt].pucStartAddress = (uint8_t *) addr;
+		heap_regions[cnt].pucStartAddress = (uint8_t*)addr;
 		heap_regions[cnt].xSizeInBytes = size;
 	}
 	else

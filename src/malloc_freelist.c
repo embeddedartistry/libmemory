@@ -1,7 +1,7 @@
 /*
-* Copyright © 2017 Embedded Artistry LLC.
-* License: MIT. See LICENSE file for details.
-*/
+ * Copyright © 2017 Embedded Artistry LLC.
+ * License: MIT. See LICENSE file for details.
+ */
 
 #include <linkedlist/ll.h>
 #include <memory.h>
@@ -10,18 +10,18 @@
 #pragma mark - Definitions -
 
 /**
-* Simple macro for making sure memory addresses are aligned
-* to the nearest power of two
-*/
+ * Simple macro for making sure memory addresses are aligned
+ * to the nearest power of two
+ */
 #ifndef align_up
 #define align_up(num, align) (((num) + ((align)-1)) & ~((align)-1))
 #endif
 
 /*
-* This is the container for our free-list.
-* Node the usage of the linked list here: the library uses offsetof
-* and container_of to manage the list and get back to the parent struct.
-*/
+ * This is the container for our free-list.
+ * Node the usage of the linked list here: the library uses offsetof
+ * and container_of to manage the list and get back to the parent struct.
+ */
 typedef struct
 {
 	ll_t node;
@@ -30,9 +30,9 @@ typedef struct
 } alloc_node_t;
 
 /**
-* We vend a memory address to the user.  This lets us translate back and forth
-* between the vended pointer and the container we use for managing the data.
-*/
+ * We vend a memory address to the user.  This lets us translate back and forth
+ * between the vended pointer and the container we use for managing the data.
+ */
 #define ALLOC_HEADER_SZ offsetof(alloc_node_t, block)
 
 // We are enforcing a minimum allocation size of 32B.
@@ -50,10 +50,10 @@ static LIST_INIT(free_list);
 #pragma mark - Private Functions -
 
 /**
-* When we free, we can take our node and check to see if any memory blocks
-* can be combined into larger blocks.  This will help us fight against
-* memory fragmentation in a simple way.
-*/
+ * When we free, we can take our node and check to see if any memory blocks
+ * can be combined into larger blocks.  This will help us fight against
+ * memory fragmentation in a simple way.
+ */
 void defrag_free_list(void)
 {
 	alloc_node_t *b, *lb = NULL, *t;
