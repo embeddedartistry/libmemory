@@ -1,7 +1,7 @@
 /*
-* Copyright © 2017 Embedded Artistry LLC.
-* License: MIT. See LICENSE file for details.
-*/
+ * Copyright © 2017 Embedded Artistry LLC.
+ * License: MIT. See LICENSE file for details.
+ */
 
 #include <support/memory.h>
 
@@ -24,10 +24,10 @@ int main(void)
 	cmocka_set_message_output(CM_OUTPUT_XML);
 
 	/*
-	* For this test framework, we need to allocate a block of memory before
-	* we run cmocka commands, otherwise they will fail since malloc cannot
-	* allocate anything
-	*/
+	 * For this test framework, we need to allocate a block of memory before
+	 * we run cmocka commands, otherwise they will fail since malloc cannot
+	 * allocate anything
+	 */
 	allocate_memory();
 
 	overall_result |= malloc_tests();
