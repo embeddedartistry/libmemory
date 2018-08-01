@@ -7,7 +7,7 @@ libmemory_freelist_test_files = [
 	'src/malloc_freelist.c'
 ]
 
-if meson.is_cross_build()
+if meson.is_cross_build() == true
 	test_libmemory_freelist_to_link = libmemory_freelist_native
 else
 	test_libmemory_freelist_to_link = libmemory_freelist
