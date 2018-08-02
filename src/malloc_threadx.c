@@ -4,10 +4,10 @@
  */
 
 #include <assert.h>
+#include <malloc.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <threadx/tx_api.h>
-#include <malloc.h>
 
 #pragma mark - Declarations -
 

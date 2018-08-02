@@ -6,10 +6,10 @@
 #include <assert.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
+#include <malloc.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <malloc.h>
 
 /**
  * NOTE: This FreeRTOS malloc implementation requires heap_5.c
