@@ -53,7 +53,11 @@ endif
 # Process source tree #
 #######################
 
+# Used for local builds - we want the warnings
 libmemory_includes = include_directories('include', 'dependencies/lib')
+
+# Used for external builds - treat the headers as system headers
+libmemory_system_includes = include_directories('include', 'dependencies/lib', is_system: true)
 
 # Library build definition
 subdir('src/')
