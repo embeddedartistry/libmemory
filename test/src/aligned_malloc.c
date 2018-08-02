@@ -5,6 +5,7 @@
 
 #include <aligned_malloc.h>
 #include <support/memory.h>
+#include <tests.h>
 
 // CMocka needs these
 // clang-format off
@@ -24,17 +25,15 @@ static void aligned_malloc_test(void** state)
 
 	assert_true(memory_allocated());
 
-	intptr_t mem_block_addr = block_start_addr();
-	intptr_t mem_block_end_addr = block_end_addr();
+	uintptr_t mem_block_addr = block_start_addr();
+	uintptr_t mem_block_end_addr = block_end_addr();
 	size_t mem_block_size = block_size();
-
-	size_t align = 2;
 
 	for(size_t align = 2; align <= 8192; align *= 2)
 	{
 		void* ptr = aligned_malloc(align, 32);
 		assert_non_null(ptr);
-		assert_in_range((intptr_t)ptr, mem_block_addr, mem_block_end_addr);
+		assert_in_range((uintptr_t)ptr, mem_block_addr, mem_block_end_addr);
 		assert_false(((uintptr_t)ptr) & (align - 1));
 		aligned_free(ptr);
 	}
@@ -44,7 +43,7 @@ static void aligned_malloc_test(void** state)
 	{
 		void* ptr = aligned_malloc(align, 32);
 		assert_non_null(ptr);
-		assert_in_range((intptr_t)ptr, mem_block_addr, mem_block_end_addr);
+		assert_in_range((uintptr_t)ptr, mem_block_addr, mem_block_end_addr);
 		assert_false(((uintptr_t)ptr) & (align - 1));
 		aligned_free(ptr);
 	}

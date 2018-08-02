@@ -14,11 +14,11 @@
 extern "C" {
 #endif //__cplusplus
 
-void allocate_memory();
-intptr_t block_start_addr();
-size_t block_size();
-intptr_t block_end_addr();
-bool memory_allocated();
+void allocate_memory(void);
+uintptr_t block_start_addr(void);
+size_t block_size(void);
+uintptr_t block_end_addr(void);
+bool memory_allocated(void);
 
 #ifdef __cplusplus
 }

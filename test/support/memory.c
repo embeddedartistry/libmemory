@@ -6,11 +6,13 @@
 #include <malloc.h>
 #include <support/memory.h>
 
+#define MEM_BLOCK_SIZE (1024 * 1024)
+
 static volatile bool allocated = false;
-static const size_t memblock_size = (1024 * 1024);
-static uint8_t mem_block[memblock_size];
-static const intptr_t mem_block_addr = (intptr_t)mem_block;
-static const intptr_t mem_block_addr_end = mem_block_addr + memblock_size;
+static const size_t memblock_size = MEM_BLOCK_SIZE;
+static uint8_t mem_block[MEM_BLOCK_SIZE];
+static const uintptr_t mem_block_addr = (uintptr_t)mem_block;
+static const uintptr_t mem_block_addr_end = mem_block_addr + memblock_size;
 
 void allocate_memory()
 {
@@ -26,12 +28,12 @@ bool memory_allocated()
 	return allocated;
 }
 
-intptr_t block_start_addr()
+uintptr_t block_start_addr()
 {
 	return mem_block_addr;
 }
 
-intptr_t block_end_addr()
+uintptr_t block_end_addr()
 {
 	return mem_block_addr_end;
 }

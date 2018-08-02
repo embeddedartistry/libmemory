@@ -6,6 +6,7 @@
 #include <malloc.h>
 #include <stdint.h>
 #include <support/memory.h>
+#include <tests.h>
 
 // CMocka needs these
 // clang-format off
@@ -29,14 +30,14 @@ static void malloc_test(void** state)
 
 	assert_true(memory_allocated());
 
-	intptr_t mem_block_addr = block_start_addr();
-	intptr_t mem_block_end_addr = block_end_addr();
+	uintptr_t mem_block_addr = block_start_addr();
+	uintptr_t mem_block_end_addr = block_end_addr();
 	size_t mem_block_size = block_size();
 
 	void* ptr = malloc(1024);
 
 	assert_non_null(ptr);
-	assert_in_range((intptr_t)ptr, mem_block_addr, mem_block_end_addr);
+	assert_in_range((uintptr_t)ptr, mem_block_addr, mem_block_end_addr);
 
 	free(ptr);
 
@@ -48,7 +49,7 @@ static void malloc_test(void** state)
 	{
 		p[i] = malloc(1024);
 		assert_non_null(p[i]);
-		assert_in_range((intptr_t)p[i], mem_block_addr, mem_block_end_addr);
+		assert_in_range((uintptr_t)p[i], mem_block_addr, mem_block_end_addr);
 	}
 
 	// Cleanup
@@ -62,7 +63,7 @@ static void malloc_test(void** state)
 	{
 		p[i] = malloc(1024);
 		assert_non_null(p[i]);
-		assert_in_range((intptr_t)p[i], mem_block_addr, mem_block_end_addr);
+		assert_in_range((uintptr_t)p[i], mem_block_addr, mem_block_end_addr);
 	}
 
 	// Cleanup

@@ -4,6 +4,7 @@
  */
 
 #include <support/memory.h>
+#include <tests.h>
 
 // CMocka needs these
 // clang-format off
@@ -12,9 +13,6 @@
 #include <stddef.h>
 #include <cmocka/cmocka.h>
 // clang-format on
-
-extern int malloc_tests(void);
-extern int aligned_malloc_tests(void);
 
 int main(void)
 {
