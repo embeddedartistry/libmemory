@@ -1,7 +1,8 @@
-#ifndef __LL_H_
-#define __LL_H_
+#ifndef LL_H__
+#define LL_H__
 
 #include <stdlib.h> //size_t, NULL
+#include <stdint.h>
 
 /**
 * Define offsetof and container_of if we don't have them already
@@ -15,11 +16,22 @@
 #endif // offsetof
 
 #ifndef container_of
+#ifdef __GNUC__
+#ifndef __clang__
+// Isolate the GNU-specific expression
 #define container_of(ptr, type, member)                       \
 	({                                                        \
 		const __typeof__(((type*)0)->member)* __mptr = (ptr); \
-		(type*)((char*)__mptr - offsetof(type, member));      \
+		(type*)((uintptr_t)__mptr - offsetof(type, member));      \
 	})
+#else // we are clang - avoid GNU expression
+#define container_of(ptr, type, member) \
+                      ((type *)((uintptr_t)(ptr) - offsetof(type, member)))
+#endif // GNU and not clang
+#else
+#define container_of(ptr, type, member) \
+                      ((type *)((uintptr_t)(ptr) - offsetof(type, member)))
+#endif //not GNU
 #endif // container_of
 
 #ifdef __cplusplus
@@ -101,4 +113,4 @@ static inline void list_del(struct ll_head* entry)
 }
 #endif //__cplusplus
 
-#endif // __LL_H_
+#endif // LL_H__
