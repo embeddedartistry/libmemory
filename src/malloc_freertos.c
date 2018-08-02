@@ -9,6 +9,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <malloc.h>
 
 /**
  * NOTE: This FreeRTOS malloc implementation requires heap_5.c
@@ -40,7 +41,7 @@ static volatile uint8_t heap_region_cnt = 0;
  *
  * An additional block is allocated to serve as a NULL terminator
  */
-static HeapRegion_t heap_regions[FREERTOS_HEAP_REGION_CNT + 1] = {0};
+static HeapRegion_t heap_regions[FREERTOS_HEAP_REGION_CNT + 1];
 
 /**
  * Flag that is used in malloc() to cause competing threads to wait until
@@ -85,7 +86,7 @@ void malloc_addblock(void* addr, size_t size)
 	}
 }
 
-void malloc_init()
+__attribute__((weak)) void malloc_init()
 {
 	assert((heap_region_cnt > 0) && !initialized_);
 

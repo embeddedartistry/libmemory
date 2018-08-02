@@ -7,11 +7,12 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <threadx/tx_api.h>
+#include <malloc.h>
 
 #pragma mark - Declarations -
 
 /// ThreadX internal memory pool stucture
-static TX_BYTE_POOL malloc_pool_ = {0};
+static TX_BYTE_POOL malloc_pool_;
 
 /**
  * Flag that is used in malloc() to cause competing threads to wait until
@@ -19,7 +20,13 @@ static TX_BYTE_POOL malloc_pool_ = {0};
  */
 volatile static bool initialized_ = false;
 
-#pragma mark - Private Functions -
+#pragma mark - APIs -
+
+__attribute__((weak)) void malloc_init(void)
+{
+	// Unused here, override to specify your own init functin
+	// Which includes malloc_addblock calls
+}
 
 /**
  * malloc_addblock must be called before memory allocation calls are made.
@@ -30,7 +37,7 @@ void malloc_addblock(void* addr, size_t size)
 {
 	assert(addr && (size > 0));
 
-	uint8_t r;
+	unsigned r;
 
 	/*
 	 * tx_byte_pool_create is ThreadX's API to create a byte pool using a memory block.
@@ -60,7 +67,7 @@ void* malloc(size_t size)
 	if(size > 0)
 	{
 		// We simply wrap the threadX call into a standard form
-		uint8_t r = tx_byte_allocate(&malloc_pool_, &ptr, size, TX_WAIT_FOREVER);
+		unsigned r = tx_byte_allocate(&malloc_pool_, &ptr, size, TX_WAIT_FOREVER);
 
 		// I add the string to provide a more helpful error output.  It's value is always true.
 		assert(r == TX_SUCCESS && "malloc failed");
@@ -77,7 +84,7 @@ void free(void* ptr)
 	if(ptr)
 	{
 		// We simply wrap the threadX call into a standard form
-		uint8_t r = tx_byte_release(ptr);
+		unsigned r = tx_byte_release(ptr);
 		ptr = NULL;
 		assert(r == TX_SUCCESS);
 	}

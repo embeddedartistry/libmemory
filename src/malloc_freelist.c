@@ -6,6 +6,7 @@
 #include <linkedlist/ll.h>
 #include <memory.h>
 #include <stdint.h>
+#include <malloc.h>
 
 #pragma mark - Definitions -
 
@@ -74,6 +75,12 @@ void defrag_free_list(void)
 }
 
 #pragma mark - APIs -
+
+__attribute__((weak)) void malloc_init(void)
+{
+	// Unused here, override to specify your own init functin
+	// Which includes malloc_addblock calls
+}
 
 void* malloc(size_t size)
 {

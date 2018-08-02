@@ -3,8 +3,8 @@
 * License: MIT. See LICENSE file for details.
 */
 
-#ifndef __MALLOC_H_
-#define __MALLOC_H_
+#ifndef MALLOC_H_
+#define MALLOC_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -28,8 +28,16 @@ extern "C" {
 */
 void malloc_addblock(void* addr, size_t size);
 
+/**
+* @brief Initialize Malloc
+*
+* Weakly linked, can be overridden based on your needs.
+* Each malloc implementation contains a different set of initialization requirements
+*/
+void malloc_init(void);
+
 #ifdef __cplusplus
 }
 #endif //__cplusplus
 
-#endif //__MALLOC_H_
+#endif //MALLOC_H_
