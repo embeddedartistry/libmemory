@@ -51,8 +51,8 @@ analyze: groundwork
 
 .PHONY: clean
 clean:
-	$(Q)echo Cleaning Build Output
-	$(Q)rm -rf $(BUILDRESULTS)/
+	$(Q)echo Cleaning build artifacts
+	$(Q)if [ -d "$(BUILDRESULTS)" ]; then cd $(BUILDRESULTS); ninja -t clean; fi
 
 .PHONY: purify
 purify:
@@ -65,7 +65,12 @@ ccc:
 
 .PHONY: test
 test: libmemory
-	$(Q)cd $(BUILDRESULTS); ./test/libmemory_freelist_test
+ifeq ("$(wildcard $(BUILDRESULTS)/testresults/)","")
+	$(Q)mkdir -p $(BUILDRESULTS)/testresults
+else
+	$(Q)rm -f $(BUILDRESULTS)/testresults/*
+endif
+	$(Q)CMOCKA_XML_FILE=$(BUILDRESULTS)/testresults/%g.xml ./$(BUILDRESULTS)/test/libmemory_freelist_test
 
 ### Help Rule ###
 .PHONY : help
