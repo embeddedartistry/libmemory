@@ -211,7 +211,7 @@ Documentation can be found in `buildresults/doc`, and the root page is `index.ht
 
 If you need further assistance or have any questions, please [file a GitHub Issue][6] or send us an email using the [Embedded Artistry Contact Form][5].
 
-You can also reach out on Twitter: [@mbeddedartistry](https://twitter.com/mbeddedartistry/).
+You can also reach out on Twitter: [\@mbeddedartistry](https://twitter.com/mbeddedartistry/).
 
 # Contributing
 
