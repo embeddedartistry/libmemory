@@ -69,6 +69,9 @@ subdir('test/')
 # Supporting Build Targets #
 ############################
 
+run_target('docs',
+	command: ['doxygen', 'docs/Doxyfile'])
+
 run_target('complexity',
 	command: ['tools/complexity_check.sh', '-w'])
 
