@@ -16,4 +16,12 @@ libmemory_freelist_tests = executable('libmemory_freelist_test',
 	native: true
 )
 
-test('libmemory_freelist_tests', libmemory_freelist_tests)
+#############################
+# Register Tests with Meson #
+#############################
+
+test_output_dir = 'CMOCKA_XML_FILE=' + meson.build_root() + '/test/%g.xml'
+
+test('libmemory_freelist_tests',
+	libmemory_freelist_tests,
+	env: [ test_output_dir ])
