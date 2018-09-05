@@ -56,28 +56,7 @@ pipeline
     {
       steps
       {
-        sh 'make doc'
-      }
-    }
-    stage('Archive')
-    {
-      steps
-      {
-        echo 'Generating Archive'
-        sh 'zip -qr buildresults/libmemory_${BUILD_NUMBER}.zip include/ buildresults/**/freelist/ buildresults/**/threadx/ buildresults/doc/'
-
-        echo 'Archiving'
-        dir("buildresults/")
-        {
-          archiveArtifacts 'libmemory_${BUILD_NUMBER}.zip'
-        }
-      }
-      post
-      {
-        failure
-        {
-          slackNotify 'ARCHIVE_ERROR'
-        }
+        sh 'make docs'
       }
     }
   }
