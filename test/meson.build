@@ -7,12 +7,15 @@ libmemory_freelist_test_files = [
 	'src/malloc_freelist.c'
 ]
 
+libcmocka = meson.get_compiler('c').find_library('cmocka', dirs: meson.source_root() + '/test')
+
 libmemory_freelist_tests = executable('libmemory_freelist_test',
 	libmemory_freelist_test_files,
 	c_args: ['-Wno-vla', '-Wno-unused-parameter'],
-	link_args: ['-lcmocka', '-lc'],
+	link_args: ['-lc'],
 	include_directories: [libmemory_includes],
-	link_with: libmemory_freelist_native,
+	link_with: [libmemory_freelist_native],
+	dependencies: [libcmocka],
 	native: true
 )
 
