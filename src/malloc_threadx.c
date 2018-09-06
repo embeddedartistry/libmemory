@@ -85,7 +85,6 @@ void free(void* ptr)
 	{
 		// We simply wrap the threadX call into a standard form
 		unsigned r = tx_byte_release(ptr);
-		ptr = NULL;
 		assert(r == TX_SUCCESS);
 	}
 }
