@@ -32,6 +32,20 @@ pipeline
         }
       }
     }
+    stage('Static Analysis')
+    {
+      steps
+      {
+        sh 'make cppcheck-xml'
+      }
+      post
+      {
+        always
+        {
+          publishCppcheck failureThreshold: '10', healthy: '2', newFailureThreshold: '5', newThreshold: '1', pattern: '**/cppcheck.xml', unHealthy: '5'
+        }
+      }
+    }
     stage('Documentation')
     {
       steps

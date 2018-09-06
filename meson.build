@@ -88,3 +88,7 @@ run_target('cppcheck',
 	# Source Directories
 	'src', 'test']
 )
+
+run_target('cppcheck-xml',
+	command: ['tools/cppcheck_xml.sh']
+)
