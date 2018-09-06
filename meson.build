@@ -77,3 +77,14 @@ run_target('complexity',
 
 run_target('complexity-list',
 	command: ['tools/complexity_check.sh'])
+
+run_target('cppcheck',
+	command: ['cppcheck',
+	# Options
+	'--quiet', '--enable=style', '--force',
+	# Include Directories
+	'-I', meson.current_source_dir() + '/include',
+	'-I', meson.current_source_dir() + '/dependencies/lib',
+	# Source Directories
+	'src', 'test']
+)
