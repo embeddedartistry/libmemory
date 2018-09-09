@@ -58,6 +58,7 @@ One memory has been allcated to the heap, you can use `malloc()` and `free()` as
 
 ## Requirements
 
+* [CMocka][3] must be installed on your system to compile the unit tests
 * [Doxygen][0] must be installed to generate documentation
 * [Premake][4] is used as the buildsystem
 	* Binaries are included for Windows, Linux, and OSX
