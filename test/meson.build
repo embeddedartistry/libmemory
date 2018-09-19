@@ -13,7 +13,9 @@ libmemory_freelist_tests = executable('libmemory_freelist_test',
 	libmemory_freelist_test_files,
 	c_args: ['-Wno-vla', '-Wno-unused-parameter'],
 	link_args: ['-lc'],
-	include_directories: [libmemory_includes],
+	include_directories: [
+		libmemory_includes,
+		include_directories('/usr/local/include/')],
 	link_with: [libmemory_freelist_native],
 	dependencies: [libcmocka],
 	native: true
