@@ -73,6 +73,13 @@ pipeline
         }
       }
     }
+    stage('Clang Tidy')
+    {
+      steps
+      {
+        sh 'make tidy'
+      }
+    }
     stage('Clang Analyzer')
     {
       steps
