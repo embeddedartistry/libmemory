@@ -2,7 +2,7 @@ cscope*out
 clang_format.patch
 
 # Generated folders
-buildresults/**
+buildresults*
 build/gen/**
 
 # Object files
