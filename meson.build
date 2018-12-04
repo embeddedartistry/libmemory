@@ -78,17 +78,40 @@ run_target('complexity',
 run_target('complexity-list',
 	command: ['tools/complexity_check.sh'])
 
-run_target('cppcheck',
-	command: ['cppcheck',
-	# Options
-	'--quiet', '--enable=style', '--force',
-	# Include Directories
-	'-I', meson.current_source_dir() + '/include',
-	'-I', meson.current_source_dir() + '/dependencies/lib',
-	# Source Directories
-	'src', 'test']
-)
 
-run_target('cppcheck-xml',
-	command: ['tools/cppcheck_xml.sh']
-)
+cppcheck = find_program('cppcheck', required: false)
+
+if cppcheck.found()
+
+	run_target('cppcheck',
+		command: ['cppcheck',
+		# Options
+		'--quiet', '--enable=style', '--force',
+		# Include Directories
+		'-I', meson.current_source_dir() + '/include',
+		'-I', meson.current_source_dir() + '/dependencies/lib',
+		# Source Directories
+		'src', 'test']
+	)
+
+	run_target('cppcheck-xml',
+		command: ['tools/cppcheck_xml.sh']
+	)
+
+endif
+
+clangtidy = find_program('clang-tidy', required: false)
+
+if clangtidy.found()
+    run_target(
+        'tidy',
+        command: [
+            'build/tooling/clang-tidy/clang-tidy.sh',
+            # Checks
+            '-*,cppcoreguidelines-*,modernize-*,performance-*,portability-*,readability-*,' +
+            '-readability-inconsistent-declaration-parameter-name,' +
+            # Header Filter
+            '.*',
+            #Finish with files
+        ] + libmemory_lint_files)
+endif
