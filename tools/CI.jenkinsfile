@@ -59,6 +59,13 @@ pipeline
         }
       }
     }
+    stage('Complexity')
+    {
+      steps
+      {
+        sh 'make ccc'
+      }
+    }
     stage('CppCheck')
     {
       steps
