@@ -17,6 +17,14 @@ rtos_includes = include_directories('../dependencies/rtos/', is_system: true)
 # Freelist #
 ############
 
+# Pick up extra functions, but don't redefine malloc
+libmemory_native = static_library(
+	'memory_native',
+	[common_files],
+	# c_args: [stdlib_compiler_flags],
+	include_directories: [libmemory_includes]
+)
+
 libmemory_freelist = static_library(
 	'memory_freelist',
 	[common_files, 'malloc_freelist.c'],
@@ -30,6 +38,12 @@ libmemory_freelist_native = static_library(
 	# c_args: [stdlib_compiler_flags],
 	include_directories: [libmemory_includes],
 	native: true
+)
+
+# Pick up extra functions, but don't redefine malloc
+libmemory_native_dep = declare_dependency(
+	link_with: libmemory_native,
+	include_directories: [libmemory_system_includes],
 )
 
 libmemory_freelist_dep = declare_dependency(
