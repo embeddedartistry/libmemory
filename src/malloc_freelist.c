@@ -112,7 +112,7 @@ void* malloc(size_t size)
 				new_blk = (alloc_node_t*)((uintptr_t)(&blk->block) + size);
 				new_blk->size = blk->size - size - ALLOC_HEADER_SZ;
 				blk->size = size;
-				list_add_(&new_blk->node, &blk->node, blk->node.next);
+				list_insert(&new_blk->node, &blk->node, blk->node.next);
 			}
 
 			list_del(&blk->node);
@@ -138,7 +138,7 @@ void free(void* ptr)
 		{
 			if(free_blk > blk)
 			{
-				list_add_(&blk->node, free_blk->node.prev, &free_blk->node);
+				list_insert(&blk->node, free_blk->node.prev, &free_blk->node);
 				goto blockadded;
 			}
 		}
