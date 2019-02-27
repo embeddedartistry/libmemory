@@ -7,6 +7,7 @@
 /** @defgroup linkedlist-C C Linked List Interface
  * A linked list library for C modules
  *
+ * @ingroup FrameworkUtils
  * @{
  */
 
@@ -337,8 +338,8 @@ static inline void list_add_tail(struct ll_head* n, struct ll_head* head)
 /// Joins the `prev` and `next` elements together, effectively removing
 /// the element in the middle.
 ///
-/// @param[in] prev
-/// @param[in] next
+/// @param[in] prev The previous element in the list, which will now be joined to next.
+/// @param[in] next The next element in the list, which will now be joined to prev.
 static inline void list_join_nodes(struct ll_head* prev, struct ll_head* next)
 {
 	next->prev = prev;
