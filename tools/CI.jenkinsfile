@@ -7,6 +7,7 @@ pipeline
   environment
   {
     GIT_CHANGE_LOG = gitChangeLog(currentBuild.changeSets)
+    REPORT_CI_TOKEN = credentials('Report-ci-token')
   }
   stages
   {
@@ -15,6 +16,9 @@ pipeline
       steps
       {
         setGithubStatus('continuous-integration/jenkins/libmemory', 'libmemory CI Build Started', 'PENDING')
+        // Notify Report CI
+        sh("curl -s https://report.ci/queue.py | python -  --name 'libmemory CI Build'")
+        sh("curl -s https://report.ci/start.py | python - ")
       }
     }
     stage('Clean')
@@ -54,8 +58,11 @@ pipeline
       {
         always
         {
-          // Report Tests
+          // Report Tests to Jenkins
           junit 'buildresults/test/*.xml'
+
+          // Report Tests to Report CI
+          sh("curl -s https://report.ci/upload.py | python - --include='buildresults/test/*.xml' --framework=cmocka")
         }
       }
     }
@@ -153,6 +160,7 @@ pipeline
       echo "Build manually aborted on Jenkins"
       slackNotify('ABORTED')
       setGithubStatus('continuous-integration/jenkins/libmemory', 'libmemory CI Build Aborted', 'ERROR')
+      sh("curl -s https://report.ci/cancel.py | python - ")
     }
     always
     {
