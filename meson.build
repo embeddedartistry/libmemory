@@ -6,34 +6,12 @@ project('libmemory',
 # Identify Compiler(s) #
 ########################
 
-native_compiler_id = meson.get_compiler('c', native : true).get_id()
-
-if meson.is_cross_build()
-	host_compiler_id = meson.get_compiler('c', native : false).get_id()
-endif
-
-######################################
-# Import compiler flags and warnings #
-######################################
-
-# Get compiler flags, and handle host vs cross builds
-if meson.is_cross_build()
-	if host_compiler_id == 'clang'
-		subdir('build/compiler/clang')
-	elif host_compiler_id == 'gcc'
-		subdir('build/compiler/gcc')
-	endif
-else
-	if native_compiler_id == 'clang'
-		subdir('build/compiler/clang')
-	elif native_compiler_id == 'gcc'
-		subdir('build/compiler/gcc')
-	endif
-endif
+# Identify compilers & get flags
+subdir('build/compiler')
 
 # compiler_args is defined in build/compiler/<target>/meson.build
-# We are the standard library, don't complain about __
-add_project_arguments([compiler_args], language: 'c')
+# We are the standard library, don't complain about __ prefixes
+add_project_arguments([compiler_args, '-Wno-reserved-id-macro'], language: ['c', 'cpp'])
 
 subdir('build/ea-stdlib')
 

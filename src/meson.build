@@ -21,21 +21,19 @@ rtos_includes = include_directories('../dependencies/rtos/', is_system: true)
 libmemory_native = static_library(
 	'memory_native',
 	[common_files],
-	# c_args: [stdlib_compiler_flags],
-	include_directories: [libmemory_includes]
+	include_directories: [libmemory_includes],
+	native: true
 )
 
 libmemory_freelist = static_library(
 	'memory_freelist',
 	[common_files, 'malloc_freelist.c'],
-	# c_args: [stdlib_compiler_flags],
 	include_directories: [libmemory_includes]
 )
 
 libmemory_freelist_native = static_library(
 	'memory_freelist_native',
 	[common_files, 'malloc_freelist.c'],
-	# c_args: [stdlib_compiler_flags],
 	include_directories: [libmemory_includes],
 	native: true
 )
@@ -55,7 +53,6 @@ libmemory_freelist_dep = declare_dependency(
 libmemory_freelist_native_dep = declare_dependency(
 	link_with: libmemory_freelist_native,
 	include_directories: [libmemory_system_includes],
-	#compile_args: stdlib_compiler_flags,
 )
 
 ###########
@@ -82,9 +79,6 @@ libmemory_threadx_dep = declare_dependency(
 libmemory_freertos = static_library(
 	'memory_freertos',
 	[common_files, 'malloc_freertos.c'],
-	c_args: [
-		#stdlib_compiler_flags
-	],
 	include_directories: [libmemory_includes, rtos_includes]
 )
 
