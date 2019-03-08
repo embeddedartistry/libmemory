@@ -18,7 +18,7 @@ static TX_BYTE_POOL malloc_pool_;
  * Flag that is used in malloc() to cause competing threads to wait until
  * initialization is completed before allocating memory.
  */
-volatile static bool initialized_ = false;
+static volatile bool initialized_ = false;
 
 #pragma mark - APIs -
 

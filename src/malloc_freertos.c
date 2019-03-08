@@ -47,7 +47,7 @@ static HeapRegion_t heap_regions[FREERTOS_HEAP_REGION_CNT + 1];
  * Flag that is used in malloc() to cause competing threads to wait until
  * initialization is completed before allocating memory.
  */
-volatile static bool initialized_ = false;
+static volatile bool initialized_ = false;
 
 #pragma mark - Private Functions -
 
