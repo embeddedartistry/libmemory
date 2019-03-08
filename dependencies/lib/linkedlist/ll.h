@@ -30,7 +30,7 @@
 #ifndef __clang__
 // Isolate the GNU-specific expression
 #define container_of(ptr, type, member)                       \
-	({                                                        \
+	__extension__ ({                                                        \
 		const __typeof__(((type*)0)->member)* __mptr = (ptr); \
 		(type*)((uintptr_t)__mptr - offsetof(type, member));  \
 	})
