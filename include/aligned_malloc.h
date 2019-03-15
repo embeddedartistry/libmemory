@@ -56,6 +56,23 @@ void* aligned_malloc(size_t align, size_t size);
 */
 #define memalign(align, size) aligned_malloc(align, size)
 
+/** Posix Memory Alignment Extension
+*
+* Generated aligned memory. This function forwards the request to aligned malloc.
+* Allocated memory must be freed with aligned_free().
+*
+* @param memptr A pointer to the pointer which will store the aligned memory. The
+*	memory must be freed with aligned_free(). memptr must not be NULL.
+* @param alignment The target alignment for the memory. Must be a power of 2.
+* @param size The size of the allocation. Must be > 0.
+*
+* @pre `memptr` is not NULL. `alignment` is power-of-2. `size` > 0.
+*
+* @returns ENOMEM if memory could not be allocated, EINVAL if alignment is not a power-of-2, and
+*	0 on successful allocation.
+*/
+int posix_memalign(void **memptr, size_t alignment, size_t size);
+
 /**
 * @brief Free aligned memory
 *

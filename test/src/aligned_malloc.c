@@ -4,6 +4,7 @@
  */
 
 #include <aligned_malloc.h>
+#include <errno.h>
 #include <support/memory.h>
 #include <tests.h>
 
@@ -61,9 +62,27 @@ static void aligned_malloc_test(void** state)
 	assert_null(ptr);
 }
 
+static void posix_memalign_test(void** state)
+{
+	void* ptr;
+	int r = posix_memalign(&ptr, 8, 8);
+	assert_non_null(ptr);
+	assert_int_equal(r, 0);
+
+	aligned_free(ptr);
+	ptr = NULL;
+
+	r = posix_memalign(&ptr, 3, 8);
+	assert_null(ptr);
+	assert_int_equal(r, EINVAL);
+}
+
 int aligned_malloc_tests(void)
 {
-	const struct CMUnitTest aligned_malloc_tests[] = {cmocka_unit_test(aligned_malloc_test)};
+	const struct CMUnitTest aligned_malloc_tests[] = {
+		cmocka_unit_test(aligned_malloc_test),
+		cmocka_unit_test(posix_memalign_test),
+	};
 
 	return cmocka_run_group_tests(aligned_malloc_tests, NULL, NULL);
 }

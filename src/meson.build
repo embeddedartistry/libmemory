@@ -2,13 +2,15 @@
 
 common_files = [
 	'aligned_malloc.c',
+	'posix_memalign.c'
 ]
 
 libmemory_lint_files = files(
 	'aligned_malloc.c',
 	'malloc_freelist.c',
 	'malloc_threadx.c',
-	'malloc_freertos.c'
+	'malloc_freertos.c',
+	'posix_memalign.c'
 	)
 
 rtos_includes = include_directories('../dependencies/rtos/', is_system: true)
