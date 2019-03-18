@@ -27,10 +27,17 @@ libmemory_native = static_library(
 	native: true
 )
 
+# Pick up extra functions, but don't redefine malloc
+libmemory_hosted = static_library(
+	'memory_hosted',
+	[common_files],
+	include_directories: [libmemory_includes, libc_target_include_directories],
+)
+
 libmemory_freelist = static_library(
 	'memory_freelist',
 	[common_files, 'malloc_freelist.c'],
-	include_directories: [libmemory_includes]
+	include_directories: [libmemory_includes, libc_target_include_directories]
 )
 
 libmemory_freelist_native = static_library(
@@ -43,6 +50,12 @@ libmemory_freelist_native = static_library(
 # Pick up extra functions, but don't redefine malloc
 libmemory_native_dep = declare_dependency(
 	link_with: libmemory_native,
+	include_directories: [libmemory_system_includes],
+)
+
+# Pick up extra functions, but don't redefine malloc
+libmemory_hosted_dep = declare_dependency(
+	link_with: libmemory_hosted,
 	include_directories: [libmemory_system_includes],
 )
 
@@ -65,7 +78,7 @@ libmemory_threadx = static_library(
 	'memory_threadx',
 	[common_files, 'malloc_threadx.c'],
 	# c_args: [stdlib_compiler_flags],
-	include_directories: [libmemory_includes, rtos_includes]
+	include_directories: [libmemory_includes, rtos_includes, libc_target_include_directories]
 )
 
 libmemory_threadx_dep = declare_dependency(
@@ -81,7 +94,7 @@ libmemory_threadx_dep = declare_dependency(
 libmemory_freertos = static_library(
 	'memory_freertos',
 	[common_files, 'malloc_freertos.c'],
-	include_directories: [libmemory_includes, rtos_includes]
+	include_directories: [libmemory_includes, rtos_includes, libc_target_include_directories]
 )
 
 libmemory_freertos_dep = declare_dependency(
