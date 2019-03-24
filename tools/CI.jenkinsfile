@@ -46,6 +46,13 @@ pipeline
         sh 'make'
       }
     }
+    stage('Cross Compile for ARM')
+    {
+      steps
+      {
+        sh 'meson buildresults/cross/ --cross-file build/cross/gcc/arm/nrf52840.txt'
+      }
+    }
     stage('Test')
     {
       steps
