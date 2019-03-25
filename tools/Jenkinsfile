@@ -25,7 +25,7 @@ pipeline
       steps
       {
         echo 'Running make clean...'
-        sh 'make clean'
+        sh 'make purify'
 
         gitTagPreBuild "${params.MAJOR_VERSION}.${params.MINOR_VERSION}.${BUILD_NUMBER}"
       }
@@ -41,7 +41,8 @@ pipeline
     {
       steps
       {
-        sh 'meson buildresults/cross/ --cross-file build/cross/gcc/arm/nrf52840.txt'
+        sh 'meson buildresults/arm/ --cross-file build/cross/gcc/arm/nrf52840.txt'
+        sh 'ninja -C buildresults/arm'
       }
     }
     stage('Test')
