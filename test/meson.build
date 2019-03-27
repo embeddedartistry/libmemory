@@ -11,7 +11,7 @@ libcmocka = meson.get_compiler('c', native: true).find_library('cmocka', require
 
 libmemory_freelist_tests = executable('libmemory_freelist_test',
 	libmemory_freelist_test_files,
-	c_args: ['-Wno-vla', '-Wno-unused-parameter'],
+	c_args: ['-Wno-vla', '-Wno-unused-parameter', '-O0'],
 	link_args: ['-lc'],
 	include_directories: [
 		include_directories('/usr/local/include/')],
