@@ -115,6 +115,16 @@ pipeline
       {
         sh 'make docs'
       }
+      post
+      {
+        success
+        {
+          dir('buildresults')
+          {
+            sh 'tar cf documentation.tgz doc/'
+          }
+        }
+      }
     }
     stage('ScanWorkspace')
     {
@@ -124,6 +134,24 @@ pipeline
 
         // Scan workspace to check open tasks
         openTasks(defaultEncoding: '', excludePattern: 'buildresults/**, dependencies/**', healthy: '', high: 'FIXME, FIX', ignoreCase: true, low: '', normal: 'TODO', pattern: '**/*.c, **/*.h, **/*.cpp, **/*.hpp, *.lua **/*.sh', unHealthy: '')
+      }
+    }
+    stage('Archive')
+    {
+      steps
+      {
+        echo 'Archiving artifacts'
+        dir('buildresults')
+        {
+          archiveArtifacts 'documentation.tgz'
+        }
+      }
+      post
+      {
+        failure
+        {
+          sendNotifications 'ARCHIVE_ERROR'
+        }
       }
     }
   }
