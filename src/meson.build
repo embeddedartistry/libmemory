@@ -10,7 +10,8 @@ libmemory_lint_files = files(
 	'malloc_freelist.c',
 	'malloc_threadx.c',
 	'malloc_freertos.c',
-	'posix_memalign.c'
+	'posix_memalign.c',
+	'malloc_assert.c'
 	)
 
 rtos_includes = include_directories('../dependencies/rtos/', is_system: true)
@@ -32,6 +33,17 @@ libmemory_hosted = static_library(
 	'memory_hosted',
 	[common_files],
 	include_directories: [libmemory_includes, libc_target_include_directories],
+)
+
+libmemory_assert = static_library('memory_assert',
+	[common_files, 'malloc_assert.c'],
+	include_directories: [libmemory_includes, libc_target_include_directories]
+)
+
+libmemory_assert_native = static_library('memory_assert_native',
+	[common_files, 'malloc_assert.c'],
+	include_directories: [libmemory_includes, libc_target_include_directories],
+	native: true,
 )
 
 libmemory_freelist = static_library(
@@ -56,6 +68,17 @@ libmemory_native_dep = declare_dependency(
 # Pick up extra functions, but don't redefine malloc
 libmemory_hosted_dep = declare_dependency(
 	link_with: libmemory_hosted,
+	include_directories: [libmemory_system_includes],
+)
+
+libmemory_assert_dep = declare_dependency(
+	link_with: libmemory_assert,
+	include_directories: [libmemory_system_includes],
+	compile_args: stdlib_compiler_flags,
+)
+
+libmemory_assert_native_dep = declare_dependency(
+	link_with: libmemory_assert_native,
 	include_directories: [libmemory_system_includes],
 )
 
