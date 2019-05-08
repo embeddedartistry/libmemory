@@ -37,12 +37,14 @@ libmemory_hosted = static_library(
 
 libmemory_assert = static_library('memory_assert',
 	[common_files, 'malloc_assert.c'],
+	c_args: '-Wno-missing-noreturn',
 	include_directories: [libmemory_includes, libc_target_include_directories]
 )
 
 libmemory_assert_native = static_library('memory_assert_native',
 	[common_files, 'malloc_assert.c'],
 	include_directories: [libmemory_includes, libc_target_include_directories],
+	c_args: '-Wno-missing-noreturn',
 	native: true,
 )
 

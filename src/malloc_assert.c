@@ -14,13 +14,13 @@ __attribute__((weak)) void malloc_init(void)
 	assert(0 && "malloc is not supported.");
 }
 
-void* malloc(size_t size)
+void* malloc(size_t __attribute__((unused)) size)
 {
 	assert(0 && "malloc is not supported");
 	return NULL;
 }
 
-void free(void* ptr)
+void free(void* __attribute__((unused)) ptr)
 {
 	assert(0 && "malloc is not supported");
 	while(1)
