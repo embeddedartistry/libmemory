@@ -127,3 +127,13 @@ libmemory_freertos_dep = declare_dependency(
 	include_directories: [libmemory_system_includes],
 	compile_args: stdlib_compiler_flags,
 )
+
+#########################
+# Framework RTOS Malloc #
+#########################
+
+libmemory_framework_rtos_dep = declare_dependency(
+	sources: files('malloc_framework_rtos.cpp'),
+	compile_args: stdlib_compiler_flags,
+	include_directories: libmemory_system_includes
+)
