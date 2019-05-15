@@ -20,7 +20,7 @@
 #pragma mark - Definitions
 
 /**
- * Your application can define this macro to increase the
+ * Your application can define this macro to increase the number of heap regions
  */
 #ifndef FREERTOS_HEAP_REGION_CNT
 #define FREERTOS_HEAP_REGION_CNT 2
