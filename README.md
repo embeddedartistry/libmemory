@@ -232,6 +232,24 @@ libmemory_header_include =  libmemory.get_variable('libmemory_system_includes')
 libmemory_framework_rtos_dep = libmemory.get_variable('libmemory_framework_rtos_dep')
 ```
 
+You can use the dependency for your target library configuration in your `executable` declarations(s) or other dependencies. For example:
+
+```
+fwdemo_sim_platform_dep = declare_dependency(
+	include_directories: fwdemo_sim_platform_inc,
+	dependencies: [
+		fwdemo_simulator_hw_platform_dep,
+		posix_os_dep,
+		libmemory_native_dep, # <----- libmemory added here
+		libc_native_dep, 
+		libcxxabi_native_dep,
+		libcxx_full_native_dep,
+		logging_subsystem_dep
+	],
+	sources: files('platform.cpp'),
+)
+```
+
 ## Testing
 
 The tests for this library are written with [CMocka][3]. You can run the tests by issuing the following command:
