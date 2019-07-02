@@ -115,11 +115,10 @@ If you are working on your first open source project or pull request, here are s
 Install these dependencies:
 
 * [Doxygen](http://www.stack.nl/~dimitri/doxygen/) must be installed to generate documentation
-* [Premake](https://github.com/premake/premake-core/wiki) is used as the buildsystem
-	* Binaries are included for Windows, Linux, and OSX
-	* If yours is not natively supported please download a binary from the website or file a GitHub issue so I can help
+* [Meson](#meson-build-system) is the build system
 * [`git-lfs`](https://git-lfs.github.com) is used to store binary files
-* `make` and `gcc` should be installed in order to compile the files (XCode covers these)
+* `make` is required to use Makefile shims
+* A compiler should be installed in order to build the project (gcc + clang have been tested)
 
 You will need to fork the main repository to work on your changes. Simply navigate to our GitHub page and click the "Fork" button at the top. Once you've forked the repository, you can clone your new repository and start making edits.
 
@@ -139,6 +138,52 @@ git checkout newfeature
 ```
 
 For more information on the GitHub fork and pull-request processes, [please see this helpful guide][5].
+
+#### git-lfs
+
+This project stores some files using [`git-lfs`](https://git-lfs.github.com).
+
+To install `git-lfs` on Linux:
+
+```
+sudo apt install git-lfs
+```
+
+To install `git-lfs` on OS X:
+
+```
+brew install git-lfs
+```
+
+Additional installation instructions can be found on the [`git-lfs` website](https://git-lfs.github.com).
+
+#### Meson Build System
+
+The [Meson][meson] build system depends on `python3` and `ninja-build`.
+
+To install on Linux:
+
+```
+sudo apt-get install python3 python3-pip ninja-build
+```
+
+To install on OSX:
+
+```
+brew install python3 ninja
+```
+
+Meson can be installed through `pip3`:
+
+```
+pip3 install meson
+```
+
+If you want to install Meson globally on Linux, use:
+
+```
+sudo -H pip3 install meson
+```
 
 ### `adr-tools`
 
@@ -162,9 +207,9 @@ The list of outstanding feature requests and bugs can be found on our on our [Gi
 
 ### Development Process
 
-This project is still a work-in-progress and does not have a strict development model. `master` contains the latest code, and new versions are tagged nightly.
+`master` contains the latest code, and new versions are tagged nightly.
 
-Please branch from `master` for any new changes.
+Please branch from `master` for any new changes. Once you are ready to merge changes, open a pull request. The build server will test and analyze the branch to ensure it can be safely merged.
 
 ### Building the Project
 
@@ -174,26 +219,23 @@ To run the build, simply call:
 $ make
 ```
 
-This will build the library and tests. You can build individual projects by navigating to `build/gen`. You will need to run `make build_gen` before this directory is populated.
+This will build the library and tests. You can build individual projects by navigating to `buildresults` and using the `ninja` interface.
 
-If you area adding new files to the library that will apply across RTOSes, you will need to modify `premake5.lua` and add the new file to each target that is not suffixed with `_UnitTests`. Modify the `files` blocks to add your file:
+If you area adding new files to the library that will apply across RTOSes, you will need to modify [`src/meson.build`](../src/meson.build) and add the new file to the `common_files` list.
 
 ```
-files
-{
-  SourceDir .. "**.h",
-  LibDir .. "**.h",
-  SourceDir .. "malloc_freelist.c",
-  SourceDir .. "aligned_malloc.c"
-}
+common_files = [
+	'aligned_malloc.c',
+	'posix_memalign.c'
+]
 ```
 
 If you would like to create a `malloc`/`free` implementation for a new RTOS:
-	* Copy the `libmemory_threadx` target
-	* Rename the build target and library output
+	* Copy the `libmemory_threadx` library target and dependency
+	* Rename the build target and library output to match the RTOS
 	* Add the relevant RTOS headers to the `dependencies/rtos` folder
 	* Update include paths if necessary
-	* Add your `malloc_*rtos*.c` file to the build list
+	* Add your `malloc_*rtos*.c` file to that RTOS's build list
 
 If you have any questions, please don't hesitate to ask for assistance.
 
