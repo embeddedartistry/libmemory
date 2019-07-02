@@ -1,6 +1,7 @@
 #include <aligned_malloc.h>
 #include <assert.h>
 #include <errno.h>
+#include <stddef.h>
 
 #define IS_POWER_2(x) (!((x) & ((x)-1)))
 
