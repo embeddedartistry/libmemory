@@ -17,6 +17,7 @@ This library is meant to be coupled with a `libc` implementation (such as the [E
 		1. [Cross-compiling](#cross-compiling)
 	4. [Installation](#installation)
 	5. [Testing](#testing)
+4. [Configuration Options](#configuration-options)
 5. [Usage](#usage)
 	1. [Aligned `malloc`](#aligned-malloc)
 4. [Formatting](#formatting)
@@ -259,6 +260,29 @@ make test
 ```
 
 By default, test results are generated for use by the CI server and are formatted in JUnit XML. The test results XML files can be found in `buildresults/test/`.
+
+## Configuration Options
+
+The following meson project options can be set for this library when creating the build results directory with `meson`, or by using `meson configure`:
+
+* `enable-werror`: Cause the build to fail if warnings are present
+* `enable-pedantic-error`: Turn on `pedantic` warnings and errors
+* `use-ea-libc`: If true, the build will set flags to prevent usage of the compiler libc so the [Embedded Artistry libc](https://github.com/embeddedartistry/libc) can supply the headers
+* `ea-libc-path`: The relative path to the root directory of the [Embedded Artistry libc](https://github.com/embeddedartistry/libc) source tree
+
+Options can be specified using `-D` and the option name:
+
+```
+meson buildresults -Denable-werror=true
+```
+
+The same style works with `meson configure`:
+
+```
+cd buildresults
+meson configure -Denable-werror=true
+```
+
 
 ## Usage
 
