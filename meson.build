@@ -34,7 +34,6 @@ if get_option('use-ea-libc') == true
 		message('Compiling with Embedded Artistry libc')
 	message('Looking for libc at location: ' + ea_libc_path +
 		'.  If libc is not found, update the ea-libc-path configuration option.')
-	# TODO: can we check for a file to confirm?
 
 	subdir('build/architecture')
 	message('Building libmemory for target architecture: ' + target_architecture)

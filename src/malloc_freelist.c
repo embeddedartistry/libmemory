@@ -57,7 +57,9 @@ static LIST_INIT(free_list);
  */
 void defrag_free_list(void)
 {
-	alloc_node_t *b, *lb = NULL, *t;
+	alloc_node_t* b;
+	alloc_node_t* lb = NULL;
+	alloc_node_t* t;
 
 	list_for_each_entry_safe(b, t, &free_list, node)
 	{
@@ -125,7 +127,8 @@ void* malloc(size_t size)
 
 void free(void* ptr)
 {
-	alloc_node_t *blk, *free_blk;
+	alloc_node_t* free_blk;
+	alloc_node_t* blk;
 
 	// Don't free a NULL pointer..
 	if(ptr)

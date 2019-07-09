@@ -24,5 +24,7 @@ void free(void* __attribute__((unused)) ptr)
 {
 	assert(0 && "malloc is not supported");
 	while(1)
-		;
+	{
+		// Loop forever
+	}
 }

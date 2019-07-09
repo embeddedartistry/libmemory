@@ -53,7 +53,8 @@ static volatile bool initialized_ = false;
 
 static int cmp_heap(const void* a, const void* b)
 {
-	const HeapRegion_t *ua = a, *ub = b;
+	const HeapRegion_t* ua = a;
+	const HeapRegion_t* ub = b;
 
 	return ((ua->pucStartAddress < ub->pucStartAddress)
 				? -1
