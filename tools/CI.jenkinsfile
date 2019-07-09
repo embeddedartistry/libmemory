@@ -86,13 +86,6 @@ pipeline
       {
         sh 'make cppcheck-xml'
       }
-      post
-      {
-        always
-        {
-          publishCppcheck failureThreshold: '10', healthy: '2', newFailureThreshold: '5', newThreshold: '1', pattern: '**/cppcheck.xml', unHealthy: '5'
-        }
-      }
     }
     stage('Clang Analyzer')
     {
@@ -136,16 +129,6 @@ pipeline
         clangFormat()
       }
     }
-    stage('ScanWorkspace')
-    {
-      steps
-      {
-        warnings categoriesPattern: '', consoleParsers: [[parserName: 'Clang (LLVM based)']], defaultEncoding: '', excludePattern: '**/buildresults/**, **/dependencies/**', failedNewAll: '5', failedTotalAll: '20', healthy: '', includePattern: '', messagesPattern: '', unHealthy: '', unstableNewAll: '1', unstableTotalAll: '15', useStableBuildAsReference: true
-
-        // Scan workspace to check open tasks
-        openTasks(defaultEncoding: '', excludePattern: 'buildresults/**, dependencies/**', healthy: '', high: 'FIXME, FIX', ignoreCase: true, low: '', normal: 'TODO', pattern: '**/*.c, **/*.h, **/*.cpp, **/*.hpp, *.lua **/*.sh', unHealthy: '')
-      }
-    }
   }
   post
   {
@@ -171,6 +154,36 @@ pipeline
     }
     always
     {
+      // Scan for open tasks, warnings, issues, etc.
+      recordIssues(
+        enabledForFailure: true,
+        healthy: 5,
+        unhealthy: 10,
+        qualityGates: [
+          // 3 new issue: unstable
+          //[threshold: 3, type: 'DELTA', unstable: true],
+          // 5 new issues: failed build
+          //[threshold: 5, type: 'DELTA', unstable: false],
+          // 10 total issues: unstable
+          //[threshold: 55, type: 'TOTAL', unstable: true],
+          // 20 total issues: fail
+          //[threshold: 75, type: 'TOTAL', unstable: false]
+        ],
+        tools: [
+          clang(),
+          taskScanner(
+            excludePattern: 'buildresults/**, dependencies/**',
+            includePattern: '**/*.c, **/*.cpp, **/*.h, **/*.hpp, **/*.lua, **/*.sh, **/*.build',
+            normalTags: 'TODO, to do, WIP',
+            highTags: 'FIXME, FIX',
+            ignoreCase: true,
+          ),
+          cppCheck(
+            pattern: 'buildresults/**/cppcheck.xml',
+          ),
+        ]
+      )
+
       slackNotify(currentBuild.currentResult)
     }
   }
