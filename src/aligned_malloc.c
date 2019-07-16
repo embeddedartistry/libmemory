@@ -66,6 +66,14 @@ void* aligned_malloc(size_t align, size_t size)
 	return ptr;
 }
 
+#if(defined(__ISO_C_VISIBLE) && __ISO_C_VISIBLE >= 2011) || \
+	(defined(__ISO_C_VISIBLE) && __STDC_VERSION >= 20112L)
+void* aligned_alloc(size_t align, size_t size)
+{
+	return aligned_malloc(align, size);
+}
+#endif
+
 /**
  * aligned_free works like free(), but we work backwards from the returned
  * pointer to find the correct offset and pointer location to return to free()
