@@ -20,7 +20,7 @@ void* malloc(size_t __attribute__((unused)) size)
 	return NULL;
 }
 
-void free(void* __attribute__((unused)) ptr)
+void free(__attribute__((unused)) void* ptr)
 {
 	assert(0 && "malloc is not supported");
 	while(1)
