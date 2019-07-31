@@ -6,12 +6,14 @@
 #include <assert.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdlib.h>
 
 #include "aligned_malloc.h"
-#include "malloc.h"
 
 #pragma mark - Definitions -
+
+// We forward declare these to prevent include header prevention from the OS
+extern void* malloc(size_t size);
+extern void free(void* ptr);
 
 /**
  * Simple macro for making sure memory addresses are aligned
