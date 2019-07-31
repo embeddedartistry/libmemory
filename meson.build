@@ -17,9 +17,23 @@ project('Embedded Artistry libmemory',
 # Identify compilers & get flags
 subdir('build/compiler')
 
-# compiler_args is defined in build/compiler/<target>/meson.build
-# We are the standard library, don't complain about __ prefixes
-add_project_arguments([compiler_args, '-Wno-reserved-id-macro'], language: ['c', 'cpp'])
+native_compiler = meson.get_compiler('c', native: true)
+host_compiler = meson.get_compiler('c')
+
+add_project_arguments(native_compiler_warnings, language: 'c', native: true)
+add_project_arguments(target_compiler_warnings, language: 'c', native: false)
+add_project_arguments(native_cpp_compiler_warnings, language: 'cpp', native: true)
+add_project_arguments(target_cpp_compiler_warnings, language: 'cpp', native: false)
+
+if native_compiler.has_argument('-Wno-reserved-id-macro')
+	# We are the standard library, don't complain about __ prefixes
+	add_project_arguments([compiler_args, '-Wno-reserved-id-macro'], language: ['c', 'cpp'], native: true)
+endif
+
+if host_compiler.has_argument('-Wno-reserved-id-macro')
+	# We are the standard library, don't complain about __ prefixes
+	add_project_arguments([compiler_args, '-Wno-reserved-id-macro'], language: ['c', 'cpp'], native: true)
+endif
 
 subdir('build/ea-stdlib')
 
