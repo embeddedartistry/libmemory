@@ -267,8 +267,8 @@ The following meson project options can be set for this library when creating th
 
 * `enable-werror`: Cause the build to fail if warnings are present
 * `enable-pedantic-error`: Turn on `pedantic` warnings and errors
-* `use-ea-libc`: If true, the build will set flags to prevent usage of the compiler libc so the [Embedded Artistry libc](https://github.com/embeddedartistry/libc) can supply the headers
-* `ea-libc-path`: The relative path to the root directory of the [Embedded Artistry libc](https://github.com/embeddedartistry/libc) source tree
+* `use-external-stdlibs`: If true, the build will set flags to prevent usage of the compiler libc so the [Embedded Artistry libc](https://github.com/embeddedartistry/libc) can supply the headers
+* `external-stdlib-path`: The relative path to the root directory of the [Embedded Artistry libc](https://github.com/embeddedartistry/libc) source tree
 
 Options can be specified using `-D` and the option name:
 

@@ -1,4 +1,4 @@
 option('enable-werror', type: 'boolean', value: false, yield: true)
 option('enable-pedantic-error', type: 'boolean', value: false, yield: true)
-option('use-ea-libc', type: 'boolean', value: false, yield: true)
-option('ea-libc-path', type: 'string', value: '../libc', yield: true)
+option('use-external-stdlibs', type: 'boolean', value: false, yield: true)
+option('external-stdlib-path', type: 'string', value: '../libc', yield: true)

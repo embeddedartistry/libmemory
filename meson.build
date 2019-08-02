@@ -43,23 +43,23 @@ subdir('build/ea-stdlib')
 
 libc_target_include_directories = []
 
-if get_option('use-ea-libc') == true
-	ea_libc_path = get_option('ea-libc-path')
+if get_option('use-external-stdlibs') == true
+	external_stdlib_path = get_option('external-stdlib-path')
 		message('Compiling with Embedded Artistry libc')
-	message('Looking for libc at location: ' + ea_libc_path +
-		'.  If libc is not found, update the ea-libc-path configuration option.')
+	message('Looking for libc at location: ' + external_stdlib_path +
+		'.  If libc is not found, update the external-stdlib-path configuration option.')
 
 	subdir('build/architecture')
 	message('Building libmemory for target architecture: ' + target_architecture)
 	libc_target_include_directories = [
-		include_directories(ea_libc_path + '/include', is_system: true),
-		include_directories(ea_libc_path + '/arch/' + target_architecture + '/include', is_system: true)
+		include_directories(external_stdlib_path + '/include', is_system: true),
+		include_directories(external_stdlib_path + '/arch/' + target_architecture + '/include', is_system: true)
 	]
 
 	message('Building libmemory for native architecture: ' + native_architecture)
 	libc_native_include_directories = [
-		include_directories(ea_libc_path + '/include', is_system: true),
-		include_directories(ea_libc_path + '/arch/' + native_architecture + '/include', is_system: true)
+		include_directories(external_stdlib_path + '/include', is_system: true),
+		include_directories(external_stdlib_path + '/arch/' + native_architecture + '/include', is_system: true)
 	]
 endif
 
