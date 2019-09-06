@@ -15,6 +15,7 @@ This library is meant to be coupled with a `libc` implementation (such as the [E
 	2. [Getting the Source](#getting-the-source)
 	3. [Building](#building)
 		1. [Cross-compiling](#cross-compiling)
+		2. [Using an Alternate Toolchain](#using-an-alternate-toolchain)
 	4. [Installation](#installation)
 	5. [Testing](#testing)
 4. [Configuration Options](#configuration-options)
