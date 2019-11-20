@@ -15,6 +15,7 @@ libmemory_lint_files = files(
 	)
 
 rtos_includes = include_directories('../dependencies/rtos/', is_system: true)
+dependency_includes = include_directories('../dependencies/lib')
 
 ############
 # Freelist #
@@ -51,13 +52,13 @@ libmemory_assert_native = static_library('memory_assert_native',
 libmemory_freelist = static_library(
 	'memory_freelist',
 	[common_files, 'malloc_freelist.c'],
-	include_directories: [libmemory_includes, libc_target_include_directories]
+	include_directories: [libmemory_includes, dependency_includes, libc_target_include_directories]
 )
 
 libmemory_freelist_native = static_library(
 	'memory_freelist_native',
 	[common_files, 'malloc_freelist.c'],
-	include_directories: [libmemory_includes],
+	include_directories: [libmemory_includes, dependency_includes],
 	native: true
 )
 
