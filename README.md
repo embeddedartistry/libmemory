@@ -97,7 +97,7 @@ Additional installation instructions can be found on the [`git-lfs` website](htt
 
 #### Meson Build System
 
-The [Meson][meson] build system depends on `python3` and `ninja-build`.
+The [Meson](https://mesonbuild.com) build system depends on `python3` and `ninja-build`.
 
 To install on Linux:
 
