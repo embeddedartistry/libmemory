@@ -20,7 +20,7 @@
 
 static void* p[ALLOCATION_TEST_COUNT];
 
-static void malloc_test(void** state)
+static void malloc_test(void** __attribute__((unused)) state)
 {
 	// Make sure memory was previously allocated
 	if(!memory_allocated())

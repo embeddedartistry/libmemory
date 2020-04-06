@@ -16,7 +16,7 @@
 #include <cmocka.h>
 // clang-format on
 
-static void aligned_malloc_test(void** state)
+static void aligned_malloc_test(void** __attribute__((unused)) state)
 {
 	// Make sure memory was previously allocated
 	if(!memory_allocated())
@@ -63,7 +63,7 @@ static void aligned_malloc_test(void** state)
 }
 
 // Might be unused in the case that AddressSanitizer is enabled
-__attribute__((unused)) static void posix_memalign_test(void** state)
+__attribute__((unused)) static void posix_memalign_test(void** __attribute__((unused)) state)
 {
 	void* ptr;
 	int r = posix_memalign(&ptr, 8, 8);
