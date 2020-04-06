@@ -82,8 +82,8 @@ int aligned_malloc_tests(void)
 {
 	const struct CMUnitTest aligned_malloc_tests[] = {
 		cmocka_unit_test(aligned_malloc_test),
-		// POSIX Memalign tests have problems with address sanitizer b/c it replaces our memalign
-		// with their memalign, but we call aligned free.. triggering a failure.
+	// POSIX Memalign tests have problems with address sanitizer b/c it replaces our memalign
+	// with their memalign, but we call aligned free.. triggering a failure.
 #if !defined(__SANITIZE_ADDRESS__)
 #if defined(__has_feature)
 #if !__has_feature(address_sanitizer)
