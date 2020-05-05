@@ -12,7 +12,6 @@ static volatile bool allocated = false;
 static const size_t memblock_size = MEM_BLOCK_SIZE;
 static uint8_t mem_block[MEM_BLOCK_SIZE];
 static const uintptr_t mem_block_addr = (uintptr_t)mem_block;
-static const uintptr_t mem_block_addr_end = mem_block_addr + memblock_size;
 
 void allocate_memory()
 {
@@ -35,7 +34,7 @@ uintptr_t block_start_addr()
 
 uintptr_t block_end_addr()
 {
-	return mem_block_addr_end;
+	return mem_block_addr + MEM_BLOCK_SIZE;
 }
 
 size_t block_size()
