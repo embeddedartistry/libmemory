@@ -17,8 +17,6 @@ libmemory_lint_files = files(
 rtos_includes = include_directories('../dependencies/rtos/', is_system: true)
 dependency_includes = include_directories('../dependencies/lib')
 
-libc_target_include_directories = []
-
 ############
 # Freelist #
 ############
@@ -27,7 +25,7 @@ libc_target_include_directories = []
 libmemory_native = static_library(
 	'memory_native',
 	[common_files],
-	include_directories: [libmemory_includes],
+	include_directories: libmemory_includes,
 	native: true
 )
 
@@ -35,18 +33,18 @@ libmemory_native = static_library(
 libmemory_hosted = static_library(
 	'memory_hosted',
 	[common_files],
-	include_directories: [libmemory_includes, libc_target_include_directories],
+	include_directories: libmemory_includes,
 )
 
 libmemory_assert = static_library('memory_assert',
 	[common_files, 'malloc_assert.c'],
 	c_args: '-Wno-missing-noreturn',
-	include_directories: [libmemory_includes, libc_target_include_directories]
+	include_directories: libmemory_includes
 )
 
 libmemory_assert_native = static_library('memory_assert_native',
 	[common_files, 'malloc_assert.c'],
-	include_directories: [libmemory_includes, libc_target_include_directories],
+	include_directories: libmemory_includes,
 	c_args: '-Wno-missing-noreturn',
 	native: true,
 )
@@ -54,7 +52,7 @@ libmemory_assert_native = static_library('memory_assert_native',
 libmemory_freelist = static_library(
 	'memory_freelist',
 	[common_files, 'malloc_freelist.c'],
-	include_directories: [libmemory_includes, dependency_includes, libc_target_include_directories]
+	include_directories: [libmemory_includes, dependency_includes]
 )
 
 libmemory_freelist_native = static_library(
@@ -67,33 +65,33 @@ libmemory_freelist_native = static_library(
 # Pick up extra functions, but don't redefine malloc
 libmemory_native_dep = declare_dependency(
 	link_with: libmemory_native,
-	include_directories: [libmemory_system_includes],
+	include_directories: libmemory_system_includes,
 )
 
 # Pick up extra functions, but don't redefine malloc
 libmemory_hosted_dep = declare_dependency(
 	link_with: libmemory_hosted,
-	include_directories: [libmemory_system_includes],
+	include_directories: libmemory_system_includes,
 )
 
 libmemory_assert_dep = declare_dependency(
 	link_with: libmemory_assert,
-	include_directories: [libmemory_system_includes],
+	include_directories: libmemory_system_includes,
 )
 
 libmemory_assert_native_dep = declare_dependency(
 	link_with: libmemory_assert_native,
-	include_directories: [libmemory_system_includes],
+	include_directories: libmemory_system_includes,
 )
 
 libmemory_freelist_dep = declare_dependency(
 	link_with: libmemory_freelist,
-	include_directories: [libmemory_system_includes],
+	include_directories: libmemory_system_includes,
 )
 
 libmemory_freelist_native_dep = declare_dependency(
 	link_with: libmemory_freelist_native,
-	include_directories: [libmemory_system_includes],
+	include_directories: libmemory_system_includes,
 )
 
 ###########
@@ -103,12 +101,12 @@ libmemory_freelist_native_dep = declare_dependency(
 libmemory_threadx = static_library(
 	'memory_threadx',
 	[common_files, 'malloc_threadx.c'],
-	include_directories: [libmemory_includes, rtos_includes, libc_target_include_directories]
+	include_directories: [libmemory_includes, rtos_includes]
 )
 
 libmemory_threadx_dep = declare_dependency(
 	link_with: libmemory_threadx,
-	include_directories: [libmemory_system_includes],
+	include_directories: libmemory_system_includes,
 )
 
 ############
@@ -118,12 +116,12 @@ libmemory_threadx_dep = declare_dependency(
 libmemory_freertos = static_library(
 	'memory_freertos',
 	[common_files, 'malloc_freertos.c'],
-	include_directories: [libmemory_includes, rtos_includes, libc_target_include_directories]
+	include_directories: [libmemory_includes, rtos_includes]
 )
 
 libmemory_freertos_dep = declare_dependency(
 	link_with: libmemory_freertos,
-	include_directories: [libmemory_system_includes],
+	include_directories: libmemory_system_includes,
 )
 
 #########################
