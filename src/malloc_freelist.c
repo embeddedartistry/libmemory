@@ -68,10 +68,10 @@ __attribute__((weak)) void malloc_lock()
  *
  * @postcondition The lock is released.
  */
- __attribute__((weak)) void malloc_unlock()
- {
- 	// Intentional no-op
- }
+__attribute__((weak)) void malloc_unlock()
+{
+	// Intentional no-op
+}
 
 #pragma mark - Declarations -
 
