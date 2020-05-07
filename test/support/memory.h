@@ -1,14 +1,14 @@
 /*
-* Copyright © 2017 Embedded Artistry LLC.
-* License: MIT. See LICENSE file for details.
-*/
+ * Copyright © 2017 Embedded Artistry LLC.
+ * License: MIT. See LICENSE file for details.
+ */
 
 #ifndef MEMORY_SUPPORT_H_
 #define MEMORY_SUPPORT_H_
 
-#include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,4 +24,4 @@ bool memory_allocated(void);
 }
 #endif //__cplusplus
 
-#endif //MEMORY_SUPPORT_H_
+#endif // MEMORY_SUPPORT_H_
