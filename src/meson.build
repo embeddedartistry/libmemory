@@ -17,6 +17,8 @@ libmemory_lint_files = files(
 rtos_includes = include_directories('../dependencies/rtos/', is_system: true)
 dependency_includes = include_directories('../dependencies/lib')
 
+libc_target_include_directories = []
+
 ############
 # Freelist #
 ############
@@ -77,7 +79,6 @@ libmemory_hosted_dep = declare_dependency(
 libmemory_assert_dep = declare_dependency(
 	link_with: libmemory_assert,
 	include_directories: [libmemory_system_includes],
-	compile_args: stdlib_compiler_flags,
 )
 
 libmemory_assert_native_dep = declare_dependency(
@@ -88,7 +89,6 @@ libmemory_assert_native_dep = declare_dependency(
 libmemory_freelist_dep = declare_dependency(
 	link_with: libmemory_freelist,
 	include_directories: [libmemory_system_includes],
-	compile_args: stdlib_compiler_flags,
 )
 
 libmemory_freelist_native_dep = declare_dependency(
@@ -103,14 +103,12 @@ libmemory_freelist_native_dep = declare_dependency(
 libmemory_threadx = static_library(
 	'memory_threadx',
 	[common_files, 'malloc_threadx.c'],
-	# c_args: [stdlib_compiler_flags],
 	include_directories: [libmemory_includes, rtos_includes, libc_target_include_directories]
 )
 
 libmemory_threadx_dep = declare_dependency(
 	link_with: libmemory_threadx,
 	include_directories: [libmemory_system_includes],
-	compile_args: stdlib_compiler_flags,
 )
 
 ############
@@ -126,7 +124,6 @@ libmemory_freertos = static_library(
 libmemory_freertos_dep = declare_dependency(
 	link_with: libmemory_freertos,
 	include_directories: [libmemory_system_includes],
-	compile_args: stdlib_compiler_flags,
 )
 
 #########################
@@ -135,6 +132,5 @@ libmemory_freertos_dep = declare_dependency(
 
 libmemory_framework_rtos_dep = declare_dependency(
 	sources: files('malloc_framework_rtos.cpp'),
-	compile_args: stdlib_compiler_flags,
 	include_directories: libmemory_system_includes
 )

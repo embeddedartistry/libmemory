@@ -1,21 +1,16 @@
 # libmemory test build definition
 
-libmemory_freelist_test_files = [
+libmemory_freelist_test_files = files(
 	'main.c',
 	'support/memory.c',
 	'src/aligned_malloc.c',
 	'src/malloc_freelist.c'
-]
-
-libcmocka = meson.get_compiler('c', native: true).find_library('cmocka', required: false, disabler: true)
+)
 
 libmemory_freelist_tests = executable('libmemory_freelist_test',
 	libmemory_freelist_test_files,
 	c_args: ['-Wno-vla', '-Wno-unused-parameter', '-O0'],
-	link_args: ['-lc'],
-	include_directories: [
-		include_directories('/usr/local/include/')],
-	dependencies: [libcmocka, libmemory_freelist_native_dep],
+	dependencies: [cmocka_native_dep, libmemory_freelist_native_dep],
 	native: true
 )
 

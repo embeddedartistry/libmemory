@@ -1,79 +1,71 @@
 project('Embedded Artistry libmemory',
 	['c', 'cpp'],
 	default_options : [
+		'warning_level=3',
+		'werror=false',
 		# `build.*` options affect `native: true targets`
 		# plain options affect `native: false` targets.
 		'c_std=c11', 'build.c_std=c11',
 		'cpp_std=c++17', 'build.cpp_std=c++17',
+		# This project defaults to a release build
+		'debug=false',
+		'optimization=2',
 	],
 	license: 'MIT',
-	meson_version: '>0.51.0',
+	meson_version: '>=0.54.0',
 	version: '1.0')
 
 ########################
 # Identify Compiler(s) #
 ########################
 
-# Identify compilers & get flags
+# Pick up our common compiler variables + desired_*_flags variables
 subdir('build/compiler')
+subdir('build/compiler/c')
+subdir('build/compiler/cpp')
 
-native_compiler = meson.get_compiler('c', native: true)
-host_compiler = meson.get_compiler('c')
+# Add project-wide flags
 
-add_project_arguments(native_compiler_warnings, language: 'c', native: true)
-add_project_arguments(target_compiler_warnings, language: 'c', native: false)
-add_project_arguments(native_cpp_compiler_warnings, language: 'cpp', native: true)
-add_project_arguments(target_cpp_compiler_warnings, language: 'cpp', native: false)
+desired_common_compile_flags += [
+	'-Wno-reserved-id-macro'
+]
 
-if native_compiler.has_argument('-Wno-reserved-id-macro')
-	# We are the standard library, don't complain about __ prefixes
-	add_project_arguments([compiler_args, '-Wno-reserved-id-macro'], language: ['c', 'cpp'], native: true)
+if get_option('enable-pedantic')
+	desired_common_compile_flags += '-pedantic'
+else
+	desired_common_compile_flags += '-Wno-pedantic'
 endif
 
-if host_compiler.has_argument('-Wno-reserved-id-macro')
-	# We are the standard library, don't complain about __ prefixes
-	add_project_arguments([compiler_args, '-Wno-reserved-id-macro'], language: ['c', 'cpp'], native: true)
+if get_option('enable-pedantic-error')
+	desired_common_compile_flags += '-pedantic-error'
 endif
 
-subdir('build/ea-stdlib')
+compile_settings_list = [
+	{'lang': 'c', 'compiler': host_c_compiler, 'flags': desired_c_compile_flags, 'isnative': false},
+	{'lang': 'c', 'compiler': native_c_compiler, 'flags': desired_native_c_compile_flags, 'isnative': true},
+	{'lang': 'cpp', 'compiler': host_cpp_compiler, 'flags': desired_c_compile_flags, 'isnative': false},
+	{'lang': 'cpp', 'compiler': native_cpp_compiler, 'flags': desired_native_c_compile_flags, 'isnative': true},
+]
 
-#########################
-# Process Build Options #
-#########################
+# Process the compilation flags
+subdir('build/compiler/check-and-apply-flags')
 
-libc_target_include_directories = []
+#################
+# Build Modules #
+#################
 
-if get_option('use-external-stdlibs') == true
-	external_stdlib_path = get_option('external-stdlib-path')
-		message('Compiling with Embedded Artistry libc')
-	message('Looking for libc at location: ' + external_stdlib_path +
-		'.  If libc is not found, update the external-stdlib-path configuration option.')
-
-	subdir('build/architecture')
-	message('Building libmemory for target architecture: ' + target_architecture)
-	libc_target_include_directories = [
-		include_directories(external_stdlib_path + '/include', is_system: true),
-		include_directories(external_stdlib_path + '/arch/' + target_architecture + '/include', is_system: true)
-	]
-
-	message('Building libmemory for native architecture: ' + native_architecture)
-	libc_native_include_directories = [
-		include_directories(external_stdlib_path + '/include', is_system: true),
-		include_directories(external_stdlib_path + '/arch/' + native_architecture + '/include', is_system: true)
-	]
-endif
-
-if get_option('enable-werror') == true
-	add_project_arguments('-Werror', language : 'c')
-endif
-
-if get_option('enable-pedantic-error') == true
-	add_project_arguments('-pedantic-error', language : 'c')
-endif
+# Include reusable build modules here via subdir() calls
+subdir('build/linker/linker-script-as-property')
+subdir('build/linker/linker-map')
+subdir('build/test/cmocka')
+subdir('build/objcopy')
 
 #######################
 # Process source tree #
 #######################
+
+# Add files to this variable if you want them analyzed by clang-tidy
+clangtidy_files = []
 
 # Used for local builds - we want the warnings
 libmemory_includes = include_directories('include')
@@ -90,53 +82,49 @@ subdir('src/')
 # Test build definition
 subdir('test/')
 
-############################
-# Supporting Build Targets #
-############################
+###################
+# Tooling Modules #
+###################
 
-run_target('docs',
-	command: ['doxygen', 'docs/Doxyfile'])
+# Customization options
+doxygen_description = 'Memory library for embedded systems (malloc and friends)'
 
-run_target('complexity',
-	command: ['tools/complexity_check.sh', '-w'])
+cppcheck_args = [
+	'-i', meson.source_root() / 'include',
+	# Folders to analyze
+	meson.source_root() / 'src',
+	meson.source_root() / 'test',
+]
 
-run_target('complexity-list',
-	command: ['tools/complexity_check.sh'])
+clangformat_additional_targets = [
+	meson.source_root() / 'include',
+]
 
+# Include modules
+subdir('build/analysis/clang-tidy')
+subdir('build/analysis/complexity')
+subdir('build/analysis/cppcheck')
+subdir('build/format')
+subdir('build/docs/doxygen')
 
-cppcheck = find_program('cppcheck', required: false)
+#############
+# Packaging #
+#############
 
-if cppcheck.found()
+# These macros allow you to simplify the declaration of includes for common
+# include paths.
+build_root_include = meson.build_root() + ':@0@'
+src_include = meson.build_root() / 'src/:@0@'
 
-	run_target('cppcheck',
-		command: ['cppcheck',
-		# Options
-		'--quiet', '--enable=style', '--force',
-		# Include Directories
-		'-I', meson.current_source_dir() + '/include',
-		'-I', meson.current_source_dir() + '/dependencies/lib',
-		# Source Directories
-		'src', 'test']
-	)
+host_pkg_files = [
+	build_root_include.format('doc'),
+	src_include.format('libc.a')
+]
 
-	run_target('cppcheck-xml',
-		command: ['tools/cppcheck_xml.sh']
-	)
+native_pkg_files = [
+	build_root_include.format('doc'),
+	src_include.format('libc_native.a')
+]
 
-endif
-
-clangtidy = find_program('clang-tidy', required: false)
-
-if clangtidy.found()
-    run_target(
-        'tidy',
-        command: [
-            'build/tooling/clang-tidy/clang-tidy.sh',
-            # Checks
-            '-*,cppcoreguidelines-*,modernize-*,performance-*,portability-*,readability-*,' +
-            '-readability-inconsistent-declaration-parameter-name,' +
-            # Header Filter
-            '.*',
-            #Finish with files
-        ] + libmemory_lint_files)
-endif
+# Invoke the package module
+subdir('build/package')
