@@ -22,7 +22,7 @@ SANITIZER ?= none
 INTERNAL_OPTIONS =
 
 ifeq ($(LTO),1)
-	INTERNAL_OPTIONS += -Db_lto=true -Ddisable-builtins=true
+	INTERNAL_OPTIONS += -Db_lto=true
 endif
 
 ifneq ($(CROSS),)
