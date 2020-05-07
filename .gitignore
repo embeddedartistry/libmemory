@@ -5,6 +5,10 @@ clang_format.patch
 buildresults*
 build/gen/**
 
+# Meson subprojects
+**/subprojects/**
+!**/subprojects/*.wrap
+
 # Object files
 *.o
 *.ko
