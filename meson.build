@@ -76,7 +76,9 @@ if get_option('use-libc-subproject') == true
 	libc_array = get_option('libc-subproject')
 	libc_subproject = subproject(libc_array[0])
 	libc_dep = libc_subproject.get_variable(libc_array[1])
-	libc_native_dep = libc_subproject.get_variable(libc_array[2], [])
+	if libc_array.length() > 2
+		libc_native_dep = libc_subproject.get_variable(libc_array[2])
+	endif
 endif
 
 #######################
