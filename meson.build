@@ -60,6 +60,25 @@ subdir('build/linker/linker-map')
 subdir('build/test/cmocka')
 subdir('build/objcopy')
 
+########################
+# External libc Option #
+########################
+
+# NOTE: External libc dependencies are only used for building the library.
+# They are not forwarded through dependencies. You are expected to handle
+# That with the rest of your program.
+
+libc_dep = []
+libc_native_dep = []
+
+if get_option('use-libc-subproject') == true
+	message('Using external libc specified in libc-subproject option.')
+	libc_array = get_option('libc-subproject')
+	libc_subproject = subproject(libc_array[0])
+	libc_dep = libc_subproject.get_variable(libc_array[1])
+	libc_native_dep = libc_subproject.get_variable(libc_array[2], [])
+endif
+
 #######################
 # Process source tree #
 #######################
