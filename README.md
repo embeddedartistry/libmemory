@@ -21,6 +21,7 @@ This library is meant to be coupled with a `libc` implementation (such as the [E
 5. [Usage](#usage)
 	1. [Thread Safety](#thread-safety)
 	1. [Aligned `malloc`](#aligned-malloc)
+5. [Using a Custom Libc](#using-a-custom-libc)
 1. [Testing](#testing)
 5. [Documentation](#documentation)
 6. [Need Help?](#need-help)
@@ -240,6 +241,8 @@ The following meson project options can be set for this library when creating th
 
 * `enable-pedantic`: Enable `pedantic` warnings
 * `enable-pedantic-error`: Turn on `pedantic` warnings and errors
+* `use-libc-subproject`: When true, use the subproject defined in the libc-subproject option. An alternate approach is to override c_stdlib in your cross files.
+* `libc-subproject`: This array is used in combination with `use-libc-subproject`. The first entry is the subproject name. The second is the cross-compilation dependency to use. The third value is optional. If used, it is a native dependency to use with native library targets.
 
 Options can be specified using `-D` and the option name:
 
@@ -320,6 +323,19 @@ void aligned_free(void* ptr);
 ```
 
 For more information, see `aligned_memory.h`and [the documentation](https://embeddedartistry.github.io/libmemory/d6/dfa/aligned__malloc_8h.html).
+
+## Using a Custom Libc
+
+This project is designed to be used along with a `libc` implementation. If you are using this library, you may not be using the standard `libc` that ships with you compiler. This library needs to know about the particular `libc` implementation during its build, in case there are important differences in definitions.
+
+There are two ways to tell this library about a `libc`:
+
+1. [Override `c_stdlib` in a cross-file](https://mesonbuild.com/Cross-compilation.html#using-a-custom-standard-library), which will be automatically used when building this library.
+2. Set `use-libc-subproject` to `true`
+	1. By default, this will use the [Embedded Artistry libc](https://github.com/embeddedartistry/libc)
+	2. You can specify another Meson subproject by configuring `libc-subproject`. This is an array: the first value is the subproject name, the second the libc dependency variable, and the third is an optional native dependency that will be used with native library variants.
+
+NOTE: External libc dependencies are only used for building the library. They are not forwarded through dependencies. You are expected to handle that with the rest of your program.
 
 ## Testing
 
