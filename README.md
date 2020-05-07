@@ -4,7 +4,7 @@ Embedded Artistry's `libmemory` is a memory management library for embedded syst
 
 `libmemory` provides various implementations of the `malloc()` and `free()` functions. The primary `malloc` implementation is a free-list allocator which can be used on a bare-metal system. Wrappers for some RTOSes are also provided (and can be added if not already). You will also find other useful memory functions, such as `aligned_malloc()`.
 
-This library is meant to be coupled with a `libc` implementation (such as the [Embedded Artistry `libc`][1]). `malloc()` and `free()` are not redefined in these headers, so you can safely use this library with your platform's existing `libc`.
+This library is meant to be coupled with a `libc` implementation (such as the [Embedded Artistry `libc`](https://github.com/embeddedartistry/libc)). `malloc()` and `free()` are not redefined in these headers, so you can safely use this library with your platform's existing `libc`.
 
 ## Table of Contents
 
@@ -12,16 +12,15 @@ This library is meant to be coupled with a `libc` implementation (such as the [E
 2. [Project Status](#project-status)
 3. [Getting Started](#getting-started)
 	1. [Requirements](#requirements)
+		1. [git-lfs](#git-lfs)
+		1. [Meson Build System](#meson-build-system)
 	2. [Getting the Source](#getting-the-source)
 	3. [Building](#building)
-		1. [Cross-compiling](#cross-compiling)
-		2. [Using an Alternate Toolchain](#using-an-alternate-toolchain)
 	4. [Installation](#installation)
-	5. [Testing](#testing)
 4. [Configuration Options](#configuration-options)
 5. [Usage](#usage)
 	1. [Aligned `malloc`](#aligned-malloc)
-4. [Formatting](#formatting)
+1. [Testing](#testing)
 5. [Documentation](#documentation)
 6. [Need Help?](#need-help)
 7. [Contributing](#contributing)
@@ -31,7 +30,7 @@ This library is meant to be coupled with a `libc` implementation (such as the [E
 11. [Acknowledgments](#Acknowledgments)
 
 
-# About the Project
+## About the Project
 
 This library is meant to allow developers of embedded systems to utilize the `malloc()` and `free()` functions if their platform does not currently support it. The baseline `malloc()` implementation can be used without an RTOS or any other supporting software. Only a block of memory needs to be assigned.
 
@@ -46,7 +45,7 @@ malloc_addblock(0xDEADBEEF, 4 * 1024 * 1024);
 
 One memory has been allocated to the heap, you can use `malloc()` and `free()` as expected.
 
-# Project Status
+## Project Status
 
 * Basic memory allocation is implemented using the free-list strategy
 * x86, x86_64, ARM, and ARM64 compilation is supported
@@ -55,27 +54,22 @@ One memory has been allocated to the heap, you can use `malloc()` and `free()` a
 * Tests are currently in place for `malloc()`, `free()`, `aligned_malloc()`, and `aligned_free()`
 * No test for overlapping memory blocks currently exists
 
-# Getting Started
+## Getting Started
 
 ### Requirements
 
-* [CMocka][3] must be installed on your system to compile and run unit tests
-* [Doxygen][0] must be installed to generate documentation
+This project uses [Embedded Artistry's standard Meson build system](https://embeddedartistry.com/fieldatlas/embedded-artistrys-standardized-meson-build-system/), and dependencies are described in detail [on our website](https://embeddedartistry.com/fieldatlas/embedded-artistrys-standardized-meson-build-system/).
+
+At a minimum you will need:
+
+* [`git-lfs`](https://git-lfs.github.com), which is used to store binary files in this repository
 * [Meson](#meson-build-system) is the build system
-* [`git-lfs`][7] is used to store binary files in this repository
-* `make` is needed if you want to use the Makefile shims
-* You'll need some kind of compiler for your target system.
+* Some kind of compiler for your target system.
 	- This repository has been tested with:
-		- gcc
+		- gcc-7, gcc-8, gcc-9
 		- arm-none-eabi-gcc
 		- Apple clang
 		- Mainline clang
-
-
-Contributors will also need:
-
-* [`adr-tools`](https://github.com/npryce/adr-tools) for documenting major project decisions
-* [`clang-format`][2] for code formatting
 
 #### git-lfs
 
@@ -123,23 +117,11 @@ If you want to install Meson globally on Linux, use:
 sudo -H pip3 install meson
 ```
 
-#### `adr-tools`
-
-This repository uses [Architecture Decision Records](https://embeddedartistry.com/blog/2018/4/5/documenting-architectural-decisions-within-our-repositories). Please install [`adr-tools`](https://github.com/npryce/adr-tools) to contribute to architecture decisions.
-
-If you are using OSX, you can install `adr-tools` through Homebrew:
-
-```
-brew install adr-tools
-```
-
-If you are using Windows or Linux, please install `adr-tools` via [GitHub](https://github.com/npryce/adr-tools).
-
 ### Getting the Source
 
 This project uses [`git-lfs`](https://git-lfs.github.com), so please install it before cloning. If you cloned prior to installing `git-lfs`, simply run `git lfs pull` after installation.
 
-This project is [hosted on GitHub][8]. You can clone the project directly using this command:
+This project is [hosted on GitHub](https://github.com/embeddedartistry/libmemory). You can clone the project directly using this command:
 
 ```
 git clone --recursive git@github.com:embeddedartistry/libmemory.git
@@ -153,7 +135,7 @@ git submodule update --init
 
 ### Building
 
-The library can be built by issuing the following command:
+If Make is installed, the library can be built by issuing the following command:
 
 ```
 make
@@ -170,10 +152,10 @@ make clean
 You can eliminate the generated `buildresults` folder using:
 
 ```
-make purify
+make distclean
 ```
 
-You can also use the `meson` method for compiling.
+You can also use  `meson` directly for compiling.
 
 Create a build output folder:
 
@@ -181,27 +163,26 @@ Create a build output folder:
 meson buildresults
 ```
 
-Then change into that folder and build targets by running:
+And build all targets by running
 
 ```
-ninja
+ninja -C buildresults
 ```
 
-At this point, `make` would still work.
-
-#### Cross-compiling
-
-Cross-compilation is handled using `meson` cross files. Example files are included in the [`build/cross`](build/cross/) folder. You can write your own cross files for your specific platform (or open an issue and we can help you).
+Cross-compilation is handled using `meson` cross files. Example files are included in the [`build/cross`](build/cross/) folder. You can write your own cross files for your specific processor by defining the toolchain, compilation flags, and linker flags. These settings will be used to compile `libc`. (or open an issue and we can help you).
 
 Cross-compilation must be configured using the meson command when creating the build output folder. For example:
 
 ```
-meson buildresults --cross-file build/cross/gcc/arm/gcc_arm_cortex-m4.txt
+meson buildresults --cross-file build/cross/gcc_arm_cortex-m4.txt
 ```
 
-Following that, you can run `make` (at the project root) or `ninja` (within the build output directory) to build the project.
+Following that, you can run `make` (at the project root) or `ninja` to build the project.
 
-Tests will not be cross-compiled. They will be built for the native platform.
+Tests will not be cross-compiled. They will only be built for the native platform.
+
+**Full instructions for building the project, using alternate toolchains, and running supporting tooling are documented in [Embedded Artistry's Standardized Meson Build System](https://embeddedartistry.com/fieldatlas/embedded-artistrys-standardized-meson-build-system/) on our website.**
+
 ### Installation
 
 If you don't use `meson` for your project, the best method to use this project is to build it separately and copy the headers and library contents into your source tree.
@@ -252,38 +233,25 @@ fwdemo_sim_platform_dep = declare_dependency(
 )
 ```
 
-## Testing
-
-The tests for this library are written with [CMocka][3]. You can run the tests by issuing the following command:
-
-```
-make test
-```
-
-By default, test results are generated for use by the CI server and are formatted in JUnit XML. The test results XML files can be found in `buildresults/test/`.
-
 ## Configuration Options
 
 The following meson project options can be set for this library when creating the build results directory with `meson`, or by using `meson configure`:
 
-* `enable-werror`: Cause the build to fail if warnings are present
+* `enable-pedantic`: Enable `pedantic` warnings
 * `enable-pedantic-error`: Turn on `pedantic` warnings and errors
-* `use-external-stdlibs`: If true, the build will set flags to prevent usage of the compiler libc so the [Embedded Artistry libc](https://github.com/embeddedartistry/libc) can supply the headers
-* `external-stdlib-path`: The relative path to the root directory of the [Embedded Artistry libc](https://github.com/embeddedartistry/libc) source tree
 
 Options can be specified using `-D` and the option name:
 
 ```
-meson buildresults -Denable-werror=true
+meson buildresults -Denable-pedantic=true
 ```
 
 The same style works with `meson configure`:
 
 ```
 cd buildresults
-meson configure -Denable-werror=true
+meson configure -Denable-pedantic=true
 ```
-
 
 ## Usage
 
@@ -321,23 +289,21 @@ Aligned memory can only be free'd using `aligned_free()`:
 void aligned_free(void* ptr);
 ```
 
-For more information, see `aligned_memory.h`and [the documentation][10].
+For more information, see `aligned_memory.h`and [the documentation](https://embeddedartistry.github.io/libmemory/d6/dfa/aligned__malloc_8h.html).
 
-# Formatting
+## Testing
 
-This repository enforces formatting using [`clang-format`][2].
-
-You can auto-format your code to match the style guidelines by issuing the following command:
+The tests for this library are written with CMocka, which is included as a subproject and does not need to be installed on your system. You can run the tests by issuing the following command:
 
 ```
-make format
+make test
 ```
 
-Formatting is enforced by the Jenkins build server which runs continuous integration for this project. Your pull request will not be accepted if the formatting check fails.
+By default, test results are generated for use by the CI server and are formatted in JUnit XML. The test results XML files can be found in `buildresults/test/`.
 
 # Documentation
 
-[Documentation for the latest release can always be found here][9].
+[Documentation for the latest release can always be found here](https://embeddedartistry.github.io/libmemory/index.html).
 
 Documentation can be built locally by running the following command:
 
@@ -345,11 +311,11 @@ Documentation can be built locally by running the following command:
 make docs
 ```
 
-Documentation can be found in `buildresults/doc`, and the root page is `index.html`.
+Documentation can be found in `buildresults/docs`, and the root page is `index.html`.
 
 # Need help?
 
-If you need further assistance or have any questions, please [file a GitHub Issue][6] or send us an email using the [Embedded Artistry Contact Form][5].
+If you need further assistance or have any questions, please [file a GitHub Issue](https://github.com/embeddedartistry/libmemory/issues/new) or send us an email using the [Embedded Artistry Contact Form](http://embeddedartistry.com/contact).
 
 You can also reach out on Twitter: [\@mbeddedartistry](https://twitter.com/mbeddedartistry/).
 
@@ -359,7 +325,7 @@ If you are interested in contributing to this project, please read our [contribu
 
 # Further Reading
 
-* [`libmemory` Documentation][9]
+* [`libmemory` Documentation](https://embeddedartistry.github.io/libmemory/index.html)
 * [CONTRIBUTING guide](docs/CONTRIBUTING.md)
 
 # Authors
@@ -375,15 +341,3 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 # Acknowledgments
 
 **[Back to top](#table-of-contents)**
-
-[0]: http://www.stack.nl/~dimitri/doxygen/
-[1]: https://github.com/embeddedartistry/libc
-[2]: https://clang.llvm.org/docs/ClangFormat.html
-[3]: https://cmocka.org
-[4]: https://github.com/premake/premake-core/wiki
-[5]: http://embeddedartistry.com/contact
-[6]: https://github.com/embeddedartistry/libmemory/issues/new
-[7]: https://git-lfs.github.com
-[8]: https://github.com/embeddedartistry/libmemory
-[9]: https://embeddedartistry.github.io/libmemory/index.html
-[10]: https://embeddedartistry.github.io/libmemory/d6/dfa/aligned__malloc_8h.html
