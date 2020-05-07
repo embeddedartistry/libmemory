@@ -1,5 +1,5 @@
 #!groovy
-@Library('jenkins-pipeline-lib') _
+@Library('jenkins-pipeline-lib@pj/new-bs') _
 
 pipeline
 {
@@ -25,7 +25,7 @@ pipeline
       steps
       {
         echo 'Running make clean...'
-        sh 'make purify'
+        sh 'make distclean'
 
         gitTagPreBuild "${params.MAJOR_VERSION}.${params.MINOR_VERSION}.${BUILD_NUMBER}"
       }
@@ -37,12 +37,12 @@ pipeline
         sh 'make'
       }
     }
-    stage('Cross Compile for ARM')
+    stage('Cross compile for ARM')
     {
       steps
       {
-        sh 'meson buildresults/arm/ --cross-file build/cross/gcc/arm/nrf52840.txt'
-        sh 'ninja -C buildresults/arm'
+        sh 'make CROSS=arm:cortex-m4_hardfloat BUILDRESULTS=buildresults/arm'
+        sh 'ninja -C buildresults/arm/'
       }
     }
     stage('Test')
@@ -64,7 +64,7 @@ pipeline
     {
       steps
       {
-        sh 'make ccc'
+        sh 'make complexity'
       }
     }
     stage('CppCheck')
@@ -85,7 +85,7 @@ pipeline
     {
       steps
       {
-        sh 'make analyze'
+        sh 'make scan-build'
       }
     }
     stage('Coverage')
@@ -98,7 +98,7 @@ pipeline
       {
         success
         {
-          cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'buildresults-coverage/meson-logs/coverage.xml', onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false
+          cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'buildresults/coverage/meson-logs/coverage.xml', onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false
         }
       }
     }
@@ -114,7 +114,7 @@ pipeline
         {
           dir('buildresults')
           {
-            sh 'tar cf documentation.tgz doc/'
+            sh 'tar cf documentation.tgz docs/'
           }
         }
       }
