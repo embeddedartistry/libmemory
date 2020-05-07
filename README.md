@@ -19,6 +19,7 @@ This library is meant to be coupled with a `libc` implementation (such as the [E
 	4. [Installation](#installation)
 4. [Configuration Options](#configuration-options)
 5. [Usage](#usage)
+	1. [Thread Safety](#thread-safety)
 	1. [Aligned `malloc`](#aligned-malloc)
 1. [Testing](#testing)
 5. [Documentation](#documentation)
@@ -272,6 +273,35 @@ malloc_addblock(0xDEADBEEF, 4 * 1024 * 1024);
 `malloc()` and `free()` will fail (return `NULL`) if no memory has been allocated. Once memory has been allocated to the heap, you can use `malloc()` and `free()` as expected.
 
 Multiple blocks of memory can be added using `malloc_addblock()`. The memory blocks do not have to be contiguous.
+
+### Thread Safety
+
+RTOS-based implementations are thread-safe depending on the RTOS and heap configuration.
+
+The freelist implementation is not thread-safe by default. If you are using this version on a threaded system, you need to define two functions within your program:
+
+```
+void malloc_lock();
+void malloc_unlock();
+```
+
+These should lock and unlock a mutex that is designed to protect `malloc`.
+
+```
+mutex_t malloc_mutex;
+
+void malloc_lock() 
+{
+	mutex_lock(&malloc_mutex);
+}
+
+void malloc_unlock()
+{
+	mutex_unlock(&malloc_mutex);
+}
+```
+
+These functions are defined as weakly linked in the library, so the default no-op condition will not be used if your functions is found by the linker. If you're doubtful that your calls are being included, check the disassembly for the functions - your version will not be no-ops!
 
 ### Aligned malloc
 

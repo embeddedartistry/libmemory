@@ -43,6 +43,36 @@ typedef struct
 
 static void defrag_free_list(void);
 
+/**
+ * @brief Lock malloc (for thread safety.)
+ *
+ * Weakly linked, can be overridden based on your needs.
+ * By default, this implementation is not thread safe, and malloc_lock() is a no-op.
+ * If you need a thread-safe version, define the function for your system - it should
+ * lock a mutex.
+ *
+ * @postcondition The lock is held by a single thread.
+ */
+__attribute__((weak)) void malloc_lock()
+{
+	// Intentional no-op
+}
+
+/**
+ * @brief Unlock malloc (for thread safety)
+ *
+ * Weakly linked, can be overridden based on your needs.
+ * By default, this implementation is not thread safe, and malloc_unlock() is a no-op.
+ * If you need a thread-safe version, define the function for your system - it should
+ * unlock a mutex.
+ *
+ * @postcondition The lock is released.
+ */
+ __attribute__((weak)) void malloc_unlock()
+ {
+ 	// Intentional no-op
+ }
+
 #pragma mark - Declarations -
 
 // This macro simply declares and initializes our linked list
@@ -94,6 +124,8 @@ void* malloc(size_t size)
 		// Align the pointer
 		size = align_up(size, sizeof(void*));
 
+		malloc_lock();
+
 		// try to find a big enough block to alloc
 		list_for_each_entry(blk, &free_list, node)
 		{
@@ -120,6 +152,8 @@ void* malloc(size_t size)
 			list_del(&blk->node);
 		}
 
+		malloc_unlock();
+
 	} // else NULL
 
 	return ptr;
@@ -136,6 +170,8 @@ void free(void* ptr)
 		// we take the pointer and use container_of to get the corresponding alloc block
 		blk = container_of(ptr, alloc_node_t, block);
 
+		malloc_lock();
+
 		// Let's put it back in the proper spot
 		list_for_each_entry(free_blk, &free_list, node)
 		{
@@ -150,6 +186,8 @@ void free(void* ptr)
 	blockadded:
 		// Let's see if we can combine any memory
 		defrag_free_list();
+
+		malloc_unlock();
 	}
 }
 
@@ -164,5 +202,7 @@ void malloc_addblock(void* addr, size_t size)
 	blk->size = (uintptr_t)addr + size - (uintptr_t)blk - ALLOC_HEADER_SZ;
 
 	// and now our giant block of memory is added to the list!
+	malloc_lock();
 	list_add(&blk->node, &free_list);
+	malloc_unlock();
 }
