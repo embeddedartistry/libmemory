@@ -7,6 +7,8 @@ libmemory_freelist_test_files = files(
 	'src/malloc_freelist.c'
 )
 
+clangtidy_files += libmemory_freelist_test_files
+
 libmemory_freelist_tests = executable('libmemory_freelist_test',
 	libmemory_freelist_test_files,
 	c_args: ['-Wno-vla', '-Wno-unused-parameter', '-O0'],

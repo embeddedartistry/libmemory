@@ -5,7 +5,7 @@ common_files = [
 	'posix_memalign.c'
 ]
 
-libmemory_lint_files = files(
+clangtidy_files = files(
 	'aligned_malloc.c',
 	'malloc_freelist.c',
 	'malloc_threadx.c',
