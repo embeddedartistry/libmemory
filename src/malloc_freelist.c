@@ -51,7 +51,7 @@ static void defrag_free_list(void);
  * If you need a thread-safe version, define the function for your system - it should
  * lock a mutex.
  *
- * @postcondition The lock is held by a single thread.
+ * @post The lock is held by a single thread.
  */
 __attribute__((weak)) void malloc_lock()
 {
@@ -66,7 +66,7 @@ __attribute__((weak)) void malloc_lock()
  * If you need a thread-safe version, define the function for your system - it should
  * unlock a mutex.
  *
- * @postcondition The lock is released.
+ * @post The lock is released.
  */
 __attribute__((weak)) void malloc_unlock()
 {
