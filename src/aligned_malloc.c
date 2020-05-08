@@ -15,6 +15,9 @@
 extern void* malloc(size_t size);
 extern void free(void* ptr);
 
+// We need to declare this prototype here since we don't include the header.
+void* aligned_alloc(size_t align, size_t size);
+
 /**
  * Simple macro for making sure memory addresses are aligned
  * to the nearest power of two
