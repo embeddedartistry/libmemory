@@ -75,7 +75,11 @@ if get_option('use-libc-subproject') == true
 	message('Using external libc specified in libc-subproject option.')
 	libc_array = get_option('libc-subproject')
 	libc_subproject = subproject(libc_array[0])
+
 	libc_dep = libc_subproject.get_variable(libc_array[1])
+	# Only pull in include directories + compile arguments
+	libc_dep = libc_dep.partial_dependency(includes: true, compile_args: true)
+
 	if libc_array.length() > 2
 		libc_native_dep = libc_subproject.get_variable(libc_array[2])
 	endif
