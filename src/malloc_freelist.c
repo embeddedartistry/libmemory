@@ -42,7 +42,6 @@ typedef struct
 #pragma mark - Prototypes -
 
 static void defrag_free_list(void);
-
 /**
  * @brief Lock malloc (for thread safety.)
  *
@@ -53,11 +52,7 @@ static void defrag_free_list(void);
  *
  * @post The lock is held by a single thread.
  */
-__attribute__((weak)) void malloc_lock()
-{
-	// Intentional no-op
-}
-
+void malloc_lock();
 /**
  * @brief Unlock malloc (for thread safety)
  *
@@ -68,10 +63,7 @@ __attribute__((weak)) void malloc_lock()
  *
  * @post The lock is released.
  */
-__attribute__((weak)) void malloc_unlock()
-{
-	// Intentional no-op
-}
+void malloc_unlock();
 
 #pragma mark - Declarations -
 
@@ -112,6 +104,16 @@ __attribute__((weak)) void malloc_init(void)
 {
 	// Unused here, override to specify your own init functin
 	// Which includes malloc_addblock calls
+}
+
+__attribute__((weak)) void malloc_lock()
+{
+	// Intentional no-op
+}
+
+__attribute__((weak)) void malloc_unlock()
+{
+	// Intentional no-op
 }
 
 void* malloc(size_t size)
