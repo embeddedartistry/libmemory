@@ -80,6 +80,7 @@ if get_option('use-libc-subproject') == true
 
 	if libc_array.length() > 2
 		libc_native_dep = libc_subproject.get_variable(libc_array[2])
+		libc_native_dep = libc_native_dep.partial_dependency(includes: true, compile_args: true)
 	endif
 endif
 
