@@ -43,8 +43,8 @@ endif
 compile_settings_list = [
 	{'lang': 'c', 'compiler': host_c_compiler, 'flags': desired_c_compile_flags, 'isnative': false},
 	{'lang': 'c', 'compiler': native_c_compiler, 'flags': desired_native_c_compile_flags, 'isnative': true},
-	{'lang': 'cpp', 'compiler': host_cpp_compiler, 'flags': desired_c_compile_flags, 'isnative': false},
-	{'lang': 'cpp', 'compiler': native_cpp_compiler, 'flags': desired_native_c_compile_flags, 'isnative': true},
+	{'lang': 'cpp', 'compiler': host_cpp_compiler, 'flags': desired_cpp_compile_flags, 'isnative': false},
+	{'lang': 'cpp', 'compiler': native_cpp_compiler, 'flags': desired_native_cpp_compile_flags, 'isnative': true},
 ]
 
 # Process the compilation flags
@@ -55,10 +55,8 @@ subdir('build/compiler/check-and-apply-flags')
 #################
 
 # Include reusable build modules here via subdir() calls
-subdir('build/linker/linker-script-as-property')
 subdir('build/linker/linker-map')
 subdir('build/test/cmocka')
-subdir('build/objcopy')
 
 ########################
 # External libc Option #
@@ -136,19 +134,26 @@ subdir('build/docs/doxygen')
 # Packaging #
 #############
 
+host_pkg_name = 'embeddedartistry_libmemory'
+native_pkg_name = host_pkg_name + '_native'
+
 # These macros allow you to simplify the declaration of includes for common
 # include paths.
 build_root_include = meson.build_root() + ':@0@'
 src_include = meson.build_root() / 'src/:@0@'
 
 host_pkg_files = [
-	build_root_include.format('doc'),
-	src_include.format('libc.a')
+	build_root_include.format('docs'),
+	src_include.format('libmemory_assert.a'),
+	src_include.format('libmemory_freelist.a'),
+	src_include.format('libmemory_freertos.a'),
+	src_include.format('libmemory_hosted.a'),
+	src_include.format('libmemory_threadx.a'),
 ]
 
 native_pkg_files = [
-	build_root_include.format('doc'),
-	src_include.format('libc_native.a')
+	build_root_include.format('docs'),
+	src_include.format('*_native.a')
 ]
 
 # Invoke the package module
