@@ -81,9 +81,9 @@ static LIST_INIT(free_list);
  */
 void defrag_free_list(void)
 {
-	alloc_node_t* b;
+	alloc_node_t* b = NULL;
 	alloc_node_t* lb = NULL;
-	alloc_node_t* t;
+	alloc_node_t* t = NULL;
 
 	list_for_each_entry_safe(b, t, &free_list, node)
 	{
@@ -146,8 +146,7 @@ void* malloc(size_t size)
 			// Can we split the block?
 			if((blk->size - size) >= MIN_ALLOC_SZ)
 			{
-				alloc_node_t* new_blk;
-				new_blk = (alloc_node_t*)((uintptr_t)(&blk->block) + size);
+				alloc_node_t* new_blk = (alloc_node_t*)((uintptr_t)(&blk->block) + size);
 				new_blk->size = blk->size - size - ALLOC_HEADER_SZ;
 				blk->size = size;
 				list_insert(&new_blk->node, &blk->node, blk->node.next);
@@ -165,14 +164,12 @@ void* malloc(size_t size)
 
 void free(void* ptr)
 {
-	alloc_node_t* free_blk;
-	alloc_node_t* blk;
-
 	// Don't free a NULL pointer..
 	if(ptr)
 	{
 		// we take the pointer and use container_of to get the corresponding alloc block
-		blk = container_of(ptr, alloc_node_t, block);
+		alloc_node_t* blk = container_of(ptr, alloc_node_t, block);
+		alloc_node_t* free_blk = NULL;
 
 		malloc_lock();
 
@@ -197,10 +194,8 @@ void free(void* ptr)
 
 void malloc_addblock(void* addr, size_t size)
 {
-	alloc_node_t* blk;
-
 	// let's align the start address of our block to the next pointer aligned number
-	blk = (void*)align_up((uintptr_t)addr, sizeof(void*));
+	alloc_node_t* blk = (void*)align_up((uintptr_t)addr, sizeof(void*));
 
 	// calculate actual size - remove our alignment and our header space from the availability
 	blk->size = (uintptr_t)addr + size - (uintptr_t)blk - ALLOC_HEADER_SZ;
