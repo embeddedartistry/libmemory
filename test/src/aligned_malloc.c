@@ -65,7 +65,7 @@ static void aligned_malloc_test(void** __attribute__((unused)) state)
 // Might be unused in the case that AddressSanitizer is enabled
 __attribute__((unused)) static void posix_memalign_test(void** __attribute__((unused)) state)
 {
-	void* ptr;
+	void* ptr = NULL;
 	int r = posix_memalign(&ptr, 8, 8);
 	assert_non_null(ptr);
 	assert_int_equal(r, 0);
