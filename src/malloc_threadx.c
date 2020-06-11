@@ -37,13 +37,11 @@ void malloc_addblock(void* addr, size_t size)
 {
 	assert(addr && (size > 0));
 
-	unsigned r;
-
 	/*
 	 * tx_byte_pool_create is ThreadX's API to create a byte pool using a memory block.
 	 * We are essentially just wrapping ThreadX APIs into a simpler form
 	 */
-	r = tx_byte_pool_create(&malloc_pool_, "Heap Memory Pool", addr, size);
+	unsigned r = tx_byte_pool_create(&malloc_pool_, "Heap Memory Pool", addr, size);
 	assert(r == TX_SUCCESS);
 
 	// Signal to any threads waiting on do_malloc that we are done
