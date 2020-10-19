@@ -38,7 +38,7 @@ ifneq ($(NATIVE),)
 endif
 
 ifeq ($(DEBUG),1)
-	INTERNAL_OPTIONS += '-Ddebug=true -Doptimization=g'
+	INTERNAL_OPTIONS += -Ddebug=true -Doptimization=g
 endif
 
 ifneq ($(SANITIZER),none)
