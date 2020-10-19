@@ -146,6 +146,7 @@ pipeline
         healthy: 5,
         unhealthy: 10,
         referenceJobName: 'ea-nightly/libmemory/master',
+        sourceDirectory: 'buildresults',
         qualityGates: [
           // 3 new issue: unstable
           [threshold: 3, type: 'DELTA', unstable: true],
