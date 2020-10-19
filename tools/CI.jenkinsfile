@@ -159,7 +159,7 @@ pipeline
         tools: [
           clang(),
           taskScanner(
-            excludePattern: 'buildresults/**, dependencies/**, build/**',
+            excludePattern: 'subprojects/**, buildresults/**, dependencies/**, build/**',
             includePattern: '**/*.c, **/*.cpp, **/*.h, **/*.hpp, **/*.lua, **/*.sh, **/*.build',
             normalTags: 'TODO, to do, WIP',
             highTags: 'FIXME, FIX',
