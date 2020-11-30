@@ -52,10 +52,13 @@ static void aligned_malloc_test(void** __attribute__((unused)) state)
 	// We can have one byte alignment - check
 	void* ptr = aligned_malloc(1, 1024);
 	assert_non_null(ptr);
+	aligned_free(ptr);
 
+#ifdef ALIGNED_MALLOC_CHECK_LARGE_ALLOC
 	// Check large allocation
 	ptr = aligned_malloc(32, mem_block_size * 2);
 	assert_null(ptr);
+#endif
 
 	// Check bad input
 	ptr = aligned_malloc(0, 1024);

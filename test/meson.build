@@ -14,7 +14,8 @@ libmemory_freelist_tests = executable('libmemory_freelist_test',
 	c_args: [
 		'-Wno-vla',
 		'-Wno-unused-parameter',
-		'-O0'
+		'-O0',
+		'-DALIGNED_MALLOC_CHECK_LARGE_ALLOC',
 	],
 	dependencies: [
 		cmocka_native_dep,
