@@ -149,7 +149,7 @@ help :
 	@echo "         and address,undefined' as a combined option"
 	@echo "Targets:"
 	@echo "  default: Builds all default targets ninja knows about"
-	@echo "  tests: Build and run unit test programs"
+	@echo "  test: Build and run unit test programs"
 	@echo "  docs: Generate documentation"
 	@echo "  package: Build the project, generates docs, and create a release package"
 	@echo "  clean: cleans build artifacts, keeping build files in place"
