@@ -16,6 +16,8 @@ __attribute__((weak)) void malloc_init(void)
 
 __attribute__((weak)) void malloc_addblock(void* addr, size_t size)
 {
+	(void)addr;
+	(void)size;
 	assert(0); // malloc is not supported.
 }
 
