@@ -11,18 +11,18 @@
 
 __attribute__((weak)) void malloc_init(void)
 {
-	assert(0 && "malloc is not supported.");
+	assert(0); // malloc is not supported.
 }
 
 void* malloc(size_t __attribute__((unused)) size)
 {
-	assert(0 && "malloc is not supported");
+	assert(0); // malloc is not supported
 	return NULL;
 }
 
 void free(__attribute__((unused)) void* ptr)
 {
-	assert(0 && "malloc is not supported");
+	assert(0); // malloc is not supported
 	while(1)
 	{
 		// Loop forever
