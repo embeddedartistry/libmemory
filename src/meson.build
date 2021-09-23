@@ -24,7 +24,10 @@ dependency_includes = include_directories('../dependencies/lib')
 # Pick up extra functions, but don't redefine malloc
 libmemory = static_library(
 	'memory',
-	[common_files],
+	[
+		common_files,
+		'malloc_addblock_init_assert.c'
+	],
 	include_directories: libmemory_includes,
 	dependencies: libc_dep,
 	# Do not built by default if we are a subproject
@@ -34,7 +37,10 @@ libmemory = static_library(
 # Pick up extra functions, but don't redefine malloc
 libmemory_native = static_library(
 	'memory_native',
-	[common_files],
+	[
+		common_files,
+		'malloc_addblock_init_assert.c'
+	],
 	include_directories: libmemory_includes,
 	dependencies: libc_native_dep,
 	native: true,
@@ -45,7 +51,10 @@ libmemory_native = static_library(
 # Pick up extra functions, but don't redefine malloc, and don't use external libc
 libmemory_hosted = static_library(
 	'memory_hosted',
-	[common_files],
+	[
+		common_files,
+		'malloc_addblock_init_assert.c'
+	],
 	include_directories: libmemory_includes,
 	# Do not built by default if we are a subproject
 	build_by_default: (meson.is_subproject() == false)
@@ -54,7 +63,10 @@ libmemory_hosted = static_library(
 # Pick up extra functions, but don't redefine malloc, and don't use external libc
 libmemory_hosted_native = static_library(
 	'memory_hosted_native',
-	[common_files],
+	[
+		common_files,
+		'malloc_addblock_init_assert.c'
+	],
 	include_directories: libmemory_includes,
 	native: true,
 	# Do not built by default if we are a subproject
