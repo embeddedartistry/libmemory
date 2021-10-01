@@ -265,7 +265,7 @@ meson configure -Denable-pedantic=true
 
 ## Library Variants
 
-This build provides a number of library variations. Many of these variants support different allocation strategies:
+This build provides a number of library variations. Many of these variants support different allocation strategies. Our recommended implementation for embedded systems without an RTOS is `libmemory_freelist`.`
 
 - `libmemory_assert`
 	+ Calls to `malloc`/`free` will assert at runtime
