@@ -187,7 +187,7 @@ Tests will not be cross-compiled. They will only be built for the native platfor
 
 ### Installation
 
-If you don't use `meson` for your project, the best method to use this project is to build it separately and copy the headers and library contents into your source tree.
+If you don't use `meson` for your project, the best method to use this project is to build it separately and copy the headers and desired library contents into your source tree.
 
 * Copy the `include/` directory contents into your source tree.
 * Library artifacts are stored in the `buildresults/src` folder
@@ -196,7 +196,7 @@ If you don't use `meson` for your project, the best method to use this project i
 Example linker flags:
 
 ```
--Lpath/to/libmemory.a -lmemory
+-Lpath/to/libmemory_freelist.a -lmemory_freelist
 ```
 
 If you're using `meson`, you can use `libmemory` as a subproject. Place it into your subproject directory of choice and add a `subproject` statement:
@@ -205,9 +205,11 @@ If you're using `meson`, you can use `libmemory` as a subproject. Place it into 
 libmemory = subproject('libmemory')
 ```
 
-You will need to promote the subproject dependencies to your project:
+You will need to promote the subproject dependencies to your project in order to use them in your build targets:
 
 ```
+libmemory = subproject('libmemory')
+
 libmemory_native_dep = libmemory.get_variable('libmemory_native_dep')
 libmemory_hosted_dep = libmemory.get_variable('libmemory_hosted_dep')
 libmemory_freelist_dep = libmemory.get_variable('libmemory_freelist_dep')
@@ -225,7 +227,7 @@ fwdemo_sim_platform_dep = declare_dependency(
 	dependencies: [
 		fwdemo_simulator_hw_platform_dep,
 		posix_os_dep,
-		libmemory_native_dep, # <----- libmemory added here
+		libmemory_native_dep, # <----- libmemory dependency added here
 		libc_native_dep, 
 		libcxxabi_native_dep,
 		libcxx_full_native_dep,
@@ -234,6 +236,8 @@ fwdemo_sim_platform_dep = declare_dependency(
 	sources: files('platform.cpp'),
 )
 ```
+
+This will add the proper include paths, library targets, and build dependency rules to your application.
 
 ## Configuration Options
 
