@@ -18,6 +18,8 @@ This library is meant to be coupled with a `libc` implementation (such as the [E
 	3. [Building](#building)
 	4. [Installation](#installation)
 4. [Configuration Options](#configuration-options)
+5. [Library Variants](#library-variants)
+	1. [Native Targets](#native-targets)
 5. [Usage](#usage)
 	1. [Thread Safety](#thread-safety)
 	1. [Aligned `malloc`](#aligned-malloc)
@@ -260,6 +262,43 @@ The same style works with `meson configure`:
 cd buildresults
 meson configure -Denable-pedantic=true
 ```
+
+## Library Variants
+
+This build provides a number of library variations. Many of these variants support different allocation strategies:
+
+- `libmemory_assert`
+	+ Calls to `malloc`/`free` will assert at runtime
+	+ This implementation is portable
+- `libmemory_freelist` 
+	+ Allocates memory from a freelist
+	+ Works with one or more blocks of memory
+	+ Memory must be initialized with `malloc_addblock`
+	+ The implementation can be made threadsafe by supplying implementations for `malloc_lock` and `malloc_unlock` in your application
+	+ This implementation is portable
+- `libmemory_freertos` 
+	+ Provides a sample FreeRTOS implementation that wraps the heap_5 FreeRTOS strategy
+	+ Memory must be initialized with `malloc_addblock`
+	+ Note that headers will need to be updated for your particular project prior to compilation (dependencies/rtos/freertos), or simply include the source code within your own project
+- `libmemory_threadx` 
+	+ Provides a sample ThreadX implementation that wraps the ThreadX memory allocators
+	+ Memory must be initialized with `malloc_addblock`
+	+ Note that headers will need to be updated for your particular project prior to compilation (dependencies/rtos/threadx), or simply include the source code within your own project
+
+We also have variants that provide supplementary functions (e.g., `aligned_malloc`) without providing an implementation for `malloc`/`free`. This is primarily used for providing source code compatibility with systems that do provide a suitable `malloc` implementation (e.g., running a test program on your build machine).
+
+- `libmemory`
+	+ Picks up extra libmemory functions but does not implement `malloc`/`free`
+	+ Will use an alternative `libc` implementation if specified
+	`malloc_addblock` and `malloc_init` will assert at runtime
+- `libmemory_hosted`
+	+ Picks up extra libmemory functions but does not implement `malloc`/`free`
+	+ Will use the compiler's `libc` implementation _unless other specified flags override that setting_ (e.g., within your own build rules)
+	+ `malloc_addblock` and `malloc_init` will assert at runtime.
+
+### Native Targets
+
+In addition, every library variant has a corresponding `_native` target. When cross-compilation builds are enabled, the target with the `_native` suffix will be compiled for your build machine, while the target without the suffix will be cross-compiled. This enables your application to use the appropriate variant for both cross-compilation targets and `native: true` targets (e.g., a unit test program or simulator application) in the same build.
 
 ## Usage
 
