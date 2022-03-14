@@ -121,7 +121,7 @@ __attribute__((weak)) void malloc_unlock()
 void* malloc(size_t size)
 {
 	void* ptr = NULL;
-	alloc_node_t* blk = NULL;
+	alloc_node_t* found_block = NULL;
 
 	if(size > 0)
 	{
@@ -131,11 +131,11 @@ void* malloc(size_t size)
 		malloc_lock();
 
 		// try to find a big enough block to alloc
-		list_for_each_entry(blk, &free_list, node)
+		list_for_each_entry(found_block, &free_list, node)
 		{
-			if(blk->size >= size)
+			if(found_block->size >= size)
 			{
-				ptr = &blk->block;
+				ptr = &found_block->block;
 				break;
 			}
 		}
@@ -144,15 +144,15 @@ void* malloc(size_t size)
 		if(ptr)
 		{
 			// Can we split the block?
-			if((blk->size - size) >= MIN_ALLOC_SZ)
+			if((found_block->size - size) >= MIN_ALLOC_SZ)
 			{
-				alloc_node_t* new_blk = (alloc_node_t*)((uintptr_t)(&blk->block) + size);
-				new_blk->size = blk->size - size - ALLOC_HEADER_SZ;
-				blk->size = size;
-				list_insert(&new_blk->node, &blk->node, blk->node.next);
+				alloc_node_t* new_block = (alloc_node_t*)((uintptr_t)(&found_block->block) + size);
+				new_block->size = found_block->size - size - ALLOC_HEADER_SZ;
+				found_block->size = size;
+				list_insert(&new_block->node, &found_block->node, found_block->node.next);
 			}
 
-			list_del(&blk->node);
+			list_del(&found_block->node);
 		}
 
 		malloc_unlock();
