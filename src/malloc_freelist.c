@@ -195,13 +195,13 @@ void free(void* ptr)
 void malloc_addblock(void* addr, size_t size)
 {
 	// let's align the start address of our block to the next pointer aligned number
-	alloc_node_t* blk = (void*)align_up((uintptr_t)addr, sizeof(void*));
+	alloc_node_t* new_memory_block = (void*)align_up((uintptr_t)addr, sizeof(void*));
 
 	// calculate actual size - remove our alignment and our header space from the availability
-	blk->size = (uintptr_t)addr + size - (uintptr_t)blk - ALLOC_HEADER_SZ;
+	new_memory_block->size = (uintptr_t)addr + size - (uintptr_t)new_memory_block - ALLOC_HEADER_SZ;
 
 	// and now our giant block of memory is added to the list!
 	malloc_lock();
-	list_add(&blk->node, &free_list);
+	list_add(&new_memory_block->node, &free_list);
 	malloc_unlock();
 }
