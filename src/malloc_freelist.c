@@ -168,21 +168,21 @@ void free(void* ptr)
 	if(ptr)
 	{
 		// we take the pointer and use container_of to get the corresponding alloc block
-		alloc_node_t* blk = container_of(ptr, alloc_node_t, block);
-		alloc_node_t* free_blk = NULL;
+		alloc_node_t* current_block = container_of(ptr, alloc_node_t, block);
+		alloc_node_t* free_block = NULL;
 
 		malloc_lock();
 
 		// Let's put it back in the proper spot
-		list_for_each_entry(free_blk, &free_list, node)
+		list_for_each_entry(free_block, &free_list, node)
 		{
-			if(free_blk > blk)
+			if(free_block > current_block)
 			{
-				list_insert(&blk->node, free_blk->node.prev, &free_blk->node);
+				list_insert(&current_block->node, free_block->node.prev, &free_block->node);
 				goto blockadded;
 			}
 		}
-		list_add_tail(&blk->node, &free_list);
+		list_add_tail(&current_block->node, &free_list);
 
 	blockadded:
 		// Let's see if we can combine any memory
