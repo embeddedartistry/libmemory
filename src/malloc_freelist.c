@@ -81,22 +81,22 @@ static LIST_INIT(free_list);
  */
 void defrag_free_list(void)
 {
-	alloc_node_t* b = NULL;
+	alloc_node_t* block = NULL;
 	alloc_node_t* last_block = NULL;
-	alloc_node_t* t = NULL;
+	alloc_node_t* temp = NULL;
 
-	list_for_each_entry_safe(b, t, &free_list, node)
+	list_for_each_entry_safe(block, temp, &free_list, node)
 	{
 		if(last_block)
 		{
-			if((((uintptr_t)&last_block->block) + last_block->size) == (uintptr_t)b)
+			if((((uintptr_t)&last_block->block) + last_block->size) == (uintptr_t)block)
 			{
-				last_block->size += ALLOC_HEADER_SZ + b->size;
-				list_del(&b->node);
+				last_block->size += ALLOC_HEADER_SZ +block->size;
+				list_del(&block->node);
 				continue;
 			}
 		}
-		last_block = b;
+		last_block = block;
 	}
 }
 
