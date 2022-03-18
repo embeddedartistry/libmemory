@@ -20,7 +20,7 @@
 
 /*
  * This is the container for our free-list.
- * Node the usage of the linked list here: the library uses offsetof
+ * Note the usage of the linked list here: the library uses offsetof
  * and container_of to manage the list and get back to the parent struct.
  */
 typedef struct
