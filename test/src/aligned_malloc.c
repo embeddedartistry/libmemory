@@ -28,7 +28,9 @@ static void aligned_malloc_test(void** __attribute__((unused)) state)
 
 	uintptr_t mem_block_addr = block_start_addr();
 	uintptr_t mem_block_end_addr = block_end_addr();
+#ifdef ALIGNED_MALLOC_CHECK_LARGE_ALLOC
 	size_t mem_block_size = block_size();
+#endif
 
 	for(size_t align = 2; align <= 8192; align *= 2)
 	{
