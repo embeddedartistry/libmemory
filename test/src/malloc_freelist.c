@@ -45,7 +45,7 @@ static void malloc_test(void** __attribute__((unused)) state)
 	ptr = malloc(2 * mem_block_size);
 	assert_null(ptr);
 
-	for(int i = 0; i < ALLOCATION_TEST_COUNT; i++)
+	for(size_t i = 0; i < ALLOCATION_TEST_COUNT; i++)
 	{
 		p[i] = malloc(1024);
 		assert_non_null(p[i]);
@@ -53,13 +53,13 @@ static void malloc_test(void** __attribute__((unused)) state)
 	}
 
 	// Cleanup
-	for(int i = 0; i < ALLOCATION_TEST_COUNT; i++)
+	for(size_t i = 0; i < ALLOCATION_TEST_COUNT; i++)
 	{
 		free(p[i]);
 	}
 
 	// Run test again, will not fail if our memory has been returned!
-	for(int i = 0; i < ALLOCATION_TEST_COUNT; i++)
+	for(size_t i = 0; i < ALLOCATION_TEST_COUNT; i++)
 	{
 		p[i] = malloc(1024);
 		assert_non_null(p[i]);
@@ -67,7 +67,7 @@ static void malloc_test(void** __attribute__((unused)) state)
 	}
 
 	// Cleanup
-	for(int i = 0; i < ALLOCATION_TEST_COUNT; i++)
+	for(size_t i = 0; i < ALLOCATION_TEST_COUNT; i++)
 	{
 		free(p[i]);
 	}
