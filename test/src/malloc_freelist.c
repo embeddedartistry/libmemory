@@ -50,6 +50,9 @@ static void malloc_test(void** __attribute__((unused)) state)
 		p[i] = malloc(1024);
 		assert_non_null(p[i]);
 		assert_in_range((uintptr_t)p[i], mem_block_addr, mem_block_end_addr);
+		// Test for unique addresses
+		if(i > 0)
+			assert_not_in_set((uintptr_t)p[i], (uintptr_t*)p, i - 1);
 	}
 
 	// Cleanup
@@ -64,6 +67,8 @@ static void malloc_test(void** __attribute__((unused)) state)
 		p[i] = malloc(1024);
 		assert_non_null(p[i]);
 		assert_in_range((uintptr_t)p[i], mem_block_addr, mem_block_end_addr);
+		if(i > 0)
+			assert_not_in_set((uintptr_t)p[i], (uintptr_t*)p, i - 1);
 	}
 
 	// Cleanup
