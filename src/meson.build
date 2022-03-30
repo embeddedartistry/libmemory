@@ -134,9 +134,18 @@ libmemory_assert_native_dep = declare_dependency(
 # Freelist #
 ############
 
+freelist_compile_args = []
+if get_option('freelist-declared-static') == false
+	# Remove the static declaration option from the free list struct
+	# The = with an empty string is needed to prevent the compiler
+	# from unhelpfully making it FREELIST_DECL_SPECIFIERS=1 on our behalf
+	freelist_compile_args += '-DFREELIST_DECL_SPECIFIERS='
+endif
+
 libmemory_freelist = static_library(
 	'memory_freelist',
 	[common_files, 'malloc_freelist.c'],
+	c_args: freelist_compile_args,
 	include_directories: [libmemory_includes, dependency_includes],
 	dependencies: libc_dep,
 	# Do not built by default if we are a subproject
@@ -146,6 +155,7 @@ libmemory_freelist = static_library(
 libmemory_freelist_native = static_library(
 	'memory_freelist_native',
 	[common_files, 'malloc_freelist.c'],
+	c_args: freelist_compile_args,
 	include_directories: [libmemory_includes, dependency_includes],
 	dependencies: libc_native_dep,
 	native: true,
