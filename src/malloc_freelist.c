@@ -8,6 +8,17 @@
 #include <memory.h>
 #include <stdint.h>
 
+/// By default, the freelist is declared as static so that it cannot be accessed
+/// outside of the library. Users who wish to override this default declaration
+/// can define `FREELIST_DECL_SPECIFIERS` to use an alternative.
+/// One option is to make it an empty definition to make it publicly visible,
+/// which may be useful for capturing state or performing metadata analysis.
+///
+/// Unless you have a specific use case, we recommend sticking with the default.
+#ifndef FREELIST_DECL_SPECIFIERS
+#define FREELIST_DECL_SPECIFIERS static
+#endif
+
 #pragma mark - Definitions -
 
 /**
@@ -70,7 +81,7 @@ void malloc_unlock();
 #pragma mark - Declarations -
 
 // This macro simply declares and initializes our linked list
-static LIST_INIT(free_list);
+FREELIST_DECL_SPECIFIERS LIST_INIT(free_list);
 
 #pragma mark - Private Functions -
 

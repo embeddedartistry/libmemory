@@ -8,3 +8,5 @@ option('libc-subproject', type: 'array',
     value: ['libc', 'libc_dep', 'libc_hosted_native_dep'],
     yield: true, 
     description: 'This array is used in combination with use-libc-subproject. The first entry is the subproject name. The second is the cross-compilation dependency to use. The third value is optional. If used, it is a native dependency to use with native library targets.')
+option('freelist-declared-static', type:'boolean', value: true, yield: true,
+    description: 'Set to false to make the freelist data structure accessible outside of the malloc_freelist.c file. By default, it has static linkage.')
