@@ -58,7 +58,7 @@ void* aligned_malloc(size_t align, size_t size)
 		{
 			/*
 			 * Add the offset size to malloc's pointer (we will always store that)
-			 * Then align the resulting value to the arget alignment
+			 * Then align the resulting value to the target alignment
 			 */
 			ptr = (void*)align_up(((uintptr_t)p + PTR_OFFSET_SZ), align);
 
