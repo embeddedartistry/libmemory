@@ -7,7 +7,7 @@
 
 int posix_memalign(void** __memptr, size_t __alignment, size_t __size)
 {
-	int r = ENOMEM;
+	int return_code = ENOMEM;
 
 	assert(__memptr);
 	assert(__size > 0);
@@ -15,7 +15,7 @@ int posix_memalign(void** __memptr, size_t __alignment, size_t __size)
 	// TODO: Do we need to check if __alignment is a multiple of sizeof(void *)?
 	if(!IS_POWER_2(__alignment))
 	{
-		r = EINVAL;
+		return_code = EINVAL;
 	}
 	else
 	{
@@ -23,9 +23,9 @@ int posix_memalign(void** __memptr, size_t __alignment, size_t __size)
 
 		if(*__memptr != NULL)
 		{
-			r = 0;
+			return_code = 0;
 		}
 	}
 
-	return r;
+	return return_code;
 }

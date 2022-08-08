@@ -18,7 +18,7 @@
 
 #define ALLOCATION_TEST_COUNT 768
 
-static void* p[ALLOCATION_TEST_COUNT];
+static void* pointer_array[ALLOCATION_TEST_COUNT];
 
 static void malloc_test(void** __attribute__((unused)) state)
 {
@@ -47,34 +47,38 @@ static void malloc_test(void** __attribute__((unused)) state)
 
 	for(size_t i = 0; i < ALLOCATION_TEST_COUNT; i++)
 	{
-		p[i] = malloc(1024);
-		assert_non_null(p[i]);
-		assert_in_range((uintptr_t)p[i], mem_block_addr, mem_block_end_addr);
+		pointer_array[i] = malloc(1024);
+		assert_non_null(pointer_array[i]);
+		assert_in_range((uintptr_t)pointer_array[i], mem_block_addr, mem_block_end_addr);
 		// Test for unique addresses
 		if(i > 0)
-			assert_not_in_set((uintptr_t)p[i], (uintptr_t*)p, i - 1);
+		{
+			assert_not_in_set((uintptr_t)pointer_array[i], (uintptr_t*)pointer_array, i - 1);
+		}
 	}
 
 	// Cleanup
 	for(size_t i = 0; i < ALLOCATION_TEST_COUNT; i++)
 	{
-		free(p[i]);
+		free(pointer_array[i]);
 	}
 
 	// Run test again, will not fail if our memory has been returned!
 	for(size_t i = 0; i < ALLOCATION_TEST_COUNT; i++)
 	{
-		p[i] = malloc(1024);
-		assert_non_null(p[i]);
-		assert_in_range((uintptr_t)p[i], mem_block_addr, mem_block_end_addr);
+		pointer_array[i] = malloc(1024);
+		assert_non_null(pointer_array[i]);
+		assert_in_range((uintptr_t)pointer_array[i], mem_block_addr, mem_block_end_addr);
 		if(i > 0)
-			assert_not_in_set((uintptr_t)p[i], (uintptr_t*)p, i - 1);
+		{
+			assert_not_in_set((uintptr_t)pointer_array[i], (uintptr_t*)pointer_array, i - 1);
+		}
 	}
 
 	// Cleanup
 	for(size_t i = 0; i < ALLOCATION_TEST_COUNT; i++)
 	{
-		free(p[i]);
+		free(pointer_array[i]);
 	}
 }
 

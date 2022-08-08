@@ -18,7 +18,7 @@
 
 #define ALLOCATION_TEST_COUNT 768
 
-static void* p[ALLOCATION_TEST_COUNT];
+static void* ptr_array[ALLOCATION_TEST_COUNT];
 
 bool malloc_lock_called = false;
 bool malloc_unlock_called = false;
@@ -67,29 +67,29 @@ static void malloc_locking_test(void** __attribute__((unused)) state)
 
 	for(int i = 0; i < ALLOCATION_TEST_COUNT; i++)
 	{
-		p[i] = malloc(1024);
-		assert_non_null(p[i]);
-		assert_in_range((uintptr_t)p[i], mem_block_addr, mem_block_end_addr);
+		ptr_array[i] = malloc(1024);
+		assert_non_null(ptr_array[i]);
+		assert_in_range((uintptr_t)ptr_array[i], mem_block_addr, mem_block_end_addr);
 	}
 
 	// Cleanup
 	for(int i = 0; i < ALLOCATION_TEST_COUNT; i++)
 	{
-		free(p[i]);
+		free(ptr_array[i]);
 	}
 
 	// Run test again, will not fail if our memory has been returned!
 	for(int i = 0; i < ALLOCATION_TEST_COUNT; i++)
 	{
-		p[i] = malloc(1024);
-		assert_non_null(p[i]);
-		assert_in_range((uintptr_t)p[i], mem_block_addr, mem_block_end_addr);
+		ptr_array[i] = malloc(1024);
+		assert_non_null(ptr_array[i]);
+		assert_in_range((uintptr_t)ptr_array[i], mem_block_addr, mem_block_end_addr);
 	}
 
 	// Cleanup
 	for(int i = 0; i < ALLOCATION_TEST_COUNT; i++)
 	{
-		free(p[i]);
+		free(ptr_array[i]);
 	}
 
 	assert_true(malloc_lock_called);

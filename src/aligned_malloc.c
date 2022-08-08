@@ -52,18 +52,18 @@ void* aligned_malloc(size_t align, size_t size)
 		 * We also allocate extra bytes to ensure we can meet the alignment
 		 */
 		size_t hdr_size = PTR_OFFSET_SZ + (align - 1);
-		void* p = malloc(size + hdr_size);
+		void* base_ptr = malloc(size + hdr_size);
 
-		if(p)
+		if(base_ptr)
 		{
 			/*
 			 * Add the offset size to malloc's pointer (we will always store that)
 			 * Then align the resulting value to the target alignment
 			 */
-			ptr = (void*)align_up(((uintptr_t)p + PTR_OFFSET_SZ), align);
+			ptr = (void*)align_up(((uintptr_t)base_ptr + PTR_OFFSET_SZ), align);
 
 			// Calculate the offset and store it behind our aligned pointer
-			*((offset_t*)ptr - 1) = (offset_t)((uintptr_t)ptr - (uintptr_t)p);
+			*((offset_t*)ptr - 1) = (offset_t)((uintptr_t)ptr - (uintptr_t)base_ptr);
 
 		} // else NULL, could not malloc
 	} // else NULL, invalid arguments
@@ -97,6 +97,6 @@ void aligned_free(void* ptr)
 	/*
 	 * Once we have the offset, we can get our original pointer and call free
 	 */
-	void* p = (void*)((uint8_t*)ptr - offset);
-	free(p);
+	void* base_ptr = (void*)((uint8_t*)ptr - offset);
+	free(base_ptr);
 }

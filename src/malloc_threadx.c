@@ -41,8 +41,8 @@ void malloc_addblock(void* addr, size_t size)
 	 * tx_byte_pool_create is ThreadX's API to create a byte pool using a memory block.
 	 * We are essentially just wrapping ThreadX APIs into a simpler form
 	 */
-	unsigned r = tx_byte_pool_create(&malloc_pool_, "Heap Memory Pool", addr, size);
-	assert(r == TX_SUCCESS);
+	unsigned return_code = tx_byte_pool_create(&malloc_pool_, "Heap Memory Pool", addr, size);
+	assert(return_code == TX_SUCCESS);
 
 	// Signal to any threads waiting on do_malloc that we are done
 	initialized_ = true;
@@ -65,10 +65,10 @@ void* malloc(size_t size)
 	if(size > 0)
 	{
 		// We simply wrap the threadX call into a standard form
-		unsigned r = tx_byte_allocate(&malloc_pool_, &ptr, size, TX_WAIT_FOREVER);
+		unsigned return_code = tx_byte_allocate(&malloc_pool_, &ptr, size, TX_WAIT_FOREVER);
 
 		// I add the string to provide a more helpful error output.  It's value is always true.
-		assert(r == TX_SUCCESS && "malloc failed");
+		assert(return_code == TX_SUCCESS && "malloc failed");
 	} // else NULL if there was an error
 
 	return ptr;
@@ -82,7 +82,7 @@ void free(void* ptr)
 	if(ptr)
 	{
 		// We simply wrap the threadX call into a standard form
-		unsigned r = tx_byte_release(ptr);
-		assert(r == TX_SUCCESS);
+		unsigned return_code = tx_byte_release(ptr);
+		assert(return_code == TX_SUCCESS);
 	}
 }

@@ -71,16 +71,16 @@ static void aligned_malloc_test(void** __attribute__((unused)) state)
 __attribute__((unused)) static void posix_memalign_test(void** __attribute__((unused)) state)
 {
 	void* ptr = NULL;
-	int r = posix_memalign(&ptr, 8, 8);
+	int return_code = posix_memalign(&ptr, 8, 8);
 	assert_non_null(ptr);
-	assert_int_equal(r, 0);
+	assert_int_equal(return_code, 0);
 
 	aligned_free(ptr);
 	ptr = NULL;
 
-	r = posix_memalign(&ptr, 3, 8);
+	return_code = posix_memalign(&ptr, 3, 8);
 	assert_null(ptr);
-	assert_int_equal(r, EINVAL);
+	assert_int_equal(return_code, EINVAL);
 }
 
 int aligned_malloc_tests(void)

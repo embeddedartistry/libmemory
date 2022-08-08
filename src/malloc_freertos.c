@@ -51,14 +51,14 @@ static volatile bool initialized_ = false;
 
 #pragma mark - Private Functions -
 
-static int cmp_heap(const void* a, const void* b)
+static int cmp_heap(const void* region_a, const void* region_b)
 {
-	const HeapRegion_t* ua = a;
-	const HeapRegion_t* ub = b;
+	const HeapRegion_t* heapregion_a = region_a;
+	const HeapRegion_t* heapregion_b = region_b;
 
-	return ((ua->pucStartAddress < ub->pucStartAddress)
+	return ((heapregion_a->pucStartAddress < heapregion_b->pucStartAddress)
 				? -1
-				: ((ua->pucStartAddress != ub->pucStartAddress)));
+				: ((heapregion_a->pucStartAddress != heapregion_b->pucStartAddress)));
 }
 
 /**
