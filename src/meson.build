@@ -15,7 +15,6 @@ clangtidy_files = files(
 	)
 
 rtos_includes = include_directories('../dependencies/rtos/', is_system: true)
-dependency_includes = include_directories('../dependencies/lib')
 
 ##################################
 # System Already Provides Malloc #
@@ -146,8 +145,11 @@ libmemory_freelist = static_library(
 	'memory_freelist',
 	[common_files, 'malloc_freelist.c'],
 	c_args: freelist_compile_args,
-	include_directories: [libmemory_includes, dependency_includes],
-	dependencies: libc_dep,
+	include_directories: libmemory_includes,
+	dependencies: [
+		libc_dep,
+		c_linked_list_dep
+	],
 	# Do not built by default if we are a subproject
 	build_by_default: (meson.is_subproject() == false)
 )
@@ -156,8 +158,11 @@ libmemory_freelist_native = static_library(
 	'memory_freelist_native',
 	[common_files, 'malloc_freelist.c'],
 	c_args: freelist_compile_args,
-	include_directories: [libmemory_includes, dependency_includes],
-	dependencies: libc_native_dep,
+	include_directories: [libmemory_includes],
+	dependencies: [
+		libc_native_dep,
+		c_linked_list_dep
+	],
 	native: true,
 	# Do not built by default if we are a subproject
 	build_by_default: (meson.is_subproject() == false)

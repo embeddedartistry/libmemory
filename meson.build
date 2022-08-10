@@ -58,6 +58,13 @@ subdir('build/compiler/check-and-apply-flags')
 subdir('build/linker/linker-map')
 subdir('build/test/cmocka')
 
+###############
+# Subprojects #
+###############
+
+c_linked_list = subproject('c-linked-list')
+c_linked_list_dep = c_linked_list.get_variable('c_linked_list_dep')
+
 ########################
 # External libc Option #
 ########################

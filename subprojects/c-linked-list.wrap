@@ -1,0 +1,5 @@
+[wrap-git]
+url = https://github.com/embeddedartistry/c-linked-list
+revision = master
+clone-recursive = true
+depth=1
