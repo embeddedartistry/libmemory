@@ -5,7 +5,6 @@
 
 #include <assert.h>
 #include <malloc.h>
-#include <memory.h>
 #include <stdio.h>
 
 __attribute__((weak)) void malloc_addblock(void* addr, size_t size)

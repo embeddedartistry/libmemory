@@ -5,7 +5,6 @@
 
 #include <linkedlist/ll.h>
 #include <malloc.h>
-#include <memory.h>
 #include <stdint.h>
 
 /// By default, the freelist is declared as static so that it cannot be accessed
