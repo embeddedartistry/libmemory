@@ -58,7 +58,7 @@ libmemory_freelist_locking_tests = executable('libmemory_freelist_locking_tests'
 # Register Tests with Meson #
 #############################
 
-test_output_dir = 'CMOCKA_XML_FILE=' + meson.build_root() + '/test/%g.xml'
+test_output_dir = 'CMOCKA_XML_FILE=' + meson.project_build_root() + '/test/%g.xml'
 
 if meson.is_subproject() == false
 	test('libmemory_freelist_tests',

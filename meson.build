@@ -121,14 +121,14 @@ subdir('test/')
 doxygen_description = 'Memory library for embedded systems (malloc and friends)'
 
 cppcheck_args = [
-	'-i', meson.source_root() / 'include',
+	'-i', meson.project_source_root() / 'include',
 	# Folders to analyze
-	meson.source_root() / 'src',
-	meson.source_root() / 'test',
+	meson.project_source_root() / 'src',
+	meson.project_source_root() / 'test',
 ]
 
 clangformat_additional_targets = [
-	meson.source_root() / 'include',
+	meson.project_source_root() / 'include',
 ]
 
 # Include modules
@@ -147,8 +147,8 @@ native_pkg_name = host_pkg_name + '_native'
 
 # These macros allow you to simplify the declaration of includes for common
 # include paths.
-build_root_include = meson.build_root() + ':@0@'
-src_include = meson.build_root() / 'src/:@0@'
+build_root_include = meson.project_build_root() + ':@0@'
+src_include = meson.project_build_root() / 'src/:@0@'
 
 host_pkg_files = [
 	build_root_include.format('docs'),
