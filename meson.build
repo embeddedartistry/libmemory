@@ -12,7 +12,7 @@ project('Embedded Artistry libmemory',
 		'optimization=2',
 	],
 	license: 'MIT',
-	meson_version: '>=0.54.0',
+	meson_version: '>=0.58.0',
 	version: '1.0')
 
 ########################
