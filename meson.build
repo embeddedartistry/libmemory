@@ -132,11 +132,15 @@ clangformat_additional_targets = [
 ]
 
 # Include modules
-subdir('meson/analysis/clang-tidy')
-subdir('meson/analysis/complexity')
-subdir('meson/analysis/cppcheck')
-subdir('meson/format')
-subdir('meson/docs/doxygen')
+# We only need to run these tools if we are the primary project.
+# This reduces config time and target clutting when in subproject mode.
+if meson.is_subproject() == false
+	subdir('meson/analysis/clang-tidy')
+	subdir('meson/analysis/complexity')
+	subdir('meson/analysis/cppcheck')
+	subdir('meson/format')
+	subdir('meson/docs/doxygen')
+endif
 
 #############
 # Packaging #
@@ -164,5 +168,9 @@ native_pkg_files = [
 	src_include.format('*_native.a')
 ]
 
-# Invoke the package module
-subdir('meson/package')
+# We only need to run this step if we are the primary project.
+# This reduces config time and target clutting when in subproject mode.
+if meson.is_subproject() == false
+	# Invoke the package module
+	subdir('meson/package')
+endif
