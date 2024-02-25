@@ -5,6 +5,7 @@
 
 #include <linkedlist/ll.h>
 #include <malloc.h>
+#include <aligned_malloc.h>
 #include <stdint.h>
 
 /// By default, the freelist is declared as static so that it cannot be accessed
@@ -46,8 +47,8 @@ typedef struct
  */
 #define ALLOC_HEADER_SZ offsetof(alloc_node_t, block)
 
-// We are enforcing a minimum allocation size of 32B.
-#define MIN_ALLOC_SZ ALLOC_HEADER_SZ + 32
+/* minimum allocation of one pointer */
+#define MIN_ALLOC_SZ (ALLOC_HEADER_SZ + sizeof(void*))
 
 #pragma mark - Prototypes -
 
@@ -128,78 +129,107 @@ __attribute__((weak)) void malloc_unlock()
 	// Intentional no-op
 }
 
+void *aligned_malloc(size_t align, size_t size)
+{
+	alloc_node_t* blk = NULL, *alloc_blk = NULL, *new_blk;
+	uintptr_t alignment_slack = 0;
+
+	// Return NULL pointer for zero size or invalid alignment
+	if (size == 0 || align == 0 || (align & (align - 1)) != 0) return NULL;
+
+	// Make sure alignment is at least pointer width
+	if (align < sizeof(void*)) align = sizeof(void*);
+
+	// Align size to the pointer width
+	size = align_up(size, sizeof(void*));
+
+	malloc_lock();
+
+	// try to find a big enough block with space for alignment
+	list_for_each_entry(blk, &free_list, node)
+	{
+		// calculate slack to align an unaligned block including space for
+		// an allocation header. slack will be zero for default alignment.
+		uintptr_t start = (uintptr_t)&blk->block;
+		uintptr_t end = align_up(start, align);
+		while (end - start != 0 &&
+		       end - start < ALLOC_HEADER_SZ) end += align;
+		alignment_slack = end - start;
+
+		// break if the block is big enough
+		if (blk->size >= size + alignment_slack)
+		{
+			alloc_blk = blk;
+			break;
+		}
+	}
+
+	if (!alloc_blk) {
+		malloc_unlock();
+		return NULL;
+	}
+
+	// split block for alignment, if necessary, by subtracting the
+	// slack less the allocation header size and adding that to the
+	// freelist so that our block field is sufficiently aligned.
+	if (alignment_slack) {
+		uintptr_t start = (uintptr_t)&alloc_blk->block;
+		new_blk = (alloc_node_t*)(start + alignment_slack - ALLOC_HEADER_SZ);
+		new_blk->size = alloc_blk->size - alignment_slack;
+		alloc_blk->size = alignment_slack - ALLOC_HEADER_SZ;
+		list_add(&new_blk->node, &alloc_blk->node);
+		alloc_blk = new_blk;
+	}
+
+	// split remainder of block if possible
+	if ((alloc_blk->size - size) >= MIN_ALLOC_SZ)
+	{
+		uintptr_t start = (uintptr_t)&alloc_blk->block;
+		new_blk = (alloc_node_t*)(start + size);
+		new_blk->size = alloc_blk->size - size - ALLOC_HEADER_SZ;
+		alloc_blk->size = size;
+		list_add(&new_blk->node, &alloc_blk->node);
+	}
+
+	list_del(&alloc_blk->node);
+
+	malloc_unlock();
+
+	return &alloc_blk->block;
+}
+
 void* malloc(size_t size)
 {
-	void* ptr = NULL;
-	alloc_node_t* found_block = NULL;
-
-	if(size > 0)
-	{
-		// Align the pointer
-		size = align_up(size, sizeof(void*));
-
-		malloc_lock();
-
-		// try to find a big enough block to alloc
-		list_for_each_entry(found_block, &free_list, node)
-		{
-			if(found_block->size >= size)
-			{
-				ptr = &found_block->block;
-				break;
-			}
-		}
-
-		// we found something
-		if(ptr)
-		{
-			// Can we split the block?
-			if((found_block->size - size) >= MIN_ALLOC_SZ)
-			{
-				alloc_node_t* new_block = (alloc_node_t*)((uintptr_t)(&found_block->block) + size);
-				new_block->size = found_block->size - size - ALLOC_HEADER_SZ;
-				found_block->size = size;
-				list_insert(&new_block->node, &found_block->node, found_block->node.next);
-			}
-
-			list_del(&found_block->node);
-		}
-
-		malloc_unlock();
-
-	} // else NULL
-
-	return ptr;
+	return aligned_malloc(sizeof(void*), size);
 }
 
 void free(void* ptr)
 {
 	// Don't free a NULL pointer..
-	if(ptr)
+	if(!ptr) return;
+
+	// we take the pointer and use container_of to get the corresponding alloc block
+	alloc_node_t* current_block = container_of(ptr, alloc_node_t, block);
+	alloc_node_t* free_block = NULL;
+
+	malloc_lock();
+
+	// Let's put it back in the proper spot
+	list_for_each_entry(free_block, &free_list, node)
 	{
-		// we take the pointer and use container_of to get the corresponding alloc block
-		alloc_node_t* current_block = container_of(ptr, alloc_node_t, block);
-		alloc_node_t* free_block = NULL;
-
-		malloc_lock();
-
-		// Let's put it back in the proper spot
-		list_for_each_entry(free_block, &free_list, node)
+		if(free_block > current_block)
 		{
-			if(free_block > current_block)
-			{
-				list_insert(&current_block->node, free_block->node.prev, &free_block->node);
-				goto blockadded;
-			}
+			list_insert(&current_block->node, free_block->node.prev, &free_block->node);
+			goto blockadded;
 		}
-		list_add_tail(&current_block->node, &free_list);
-
-	blockadded:
-		// Let's see if we can combine any memory
-		defrag_free_list();
-
-		malloc_unlock();
 	}
+	list_add_tail(&current_block->node, &free_list);
+
+blockadded:
+	// Let's see if we can combine any memory
+	defrag_free_list();
+
+	malloc_unlock();
 }
 
 void malloc_addblock(void* addr, size_t size)
