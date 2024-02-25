@@ -34,43 +34,6 @@ typedef uint16_t offset_t;
 
 #pragma mark - APIs -
 
-/**
- * We will call malloc with extra bytes for our header and the offset
- *	required to guarantee the desired alignment.
- */
-void* aligned_malloc(size_t align, size_t size)
-{
-	void* ptr = NULL;
-
-	// We want it to be a power of two since align_up operates on powers of two
-	assert((align & (align - 1)) == 0);
-
-	if(align && size)
-	{
-		/*
-		 * We know we have to fit an offset value
-		 * We also allocate extra bytes to ensure we can meet the alignment
-		 */
-		size_t hdr_size = PTR_OFFSET_SZ + (align - 1);
-		void* base_ptr = malloc(size + hdr_size);
-
-		if(base_ptr)
-		{
-			/*
-			 * Add the offset size to malloc's pointer (we will always store that)
-			 * Then align the resulting value to the target alignment
-			 */
-			ptr = (void*)align_up(((uintptr_t)base_ptr + PTR_OFFSET_SZ), align);
-
-			// Calculate the offset and store it behind our aligned pointer
-			*((offset_t*)ptr - 1) = (offset_t)((uintptr_t)ptr - (uintptr_t)base_ptr);
-
-		} // else NULL, could not malloc
-	} // else NULL, invalid arguments
-
-	return ptr;
-}
-
 #if(defined(__ISO_C_VISIBLE) && __ISO_C_VISIBLE >= 2011) || \
 	(defined(__ISO_C_VISIBLE) && __STDC_VERSION >= 20112L)
 void* aligned_alloc(size_t align, size_t size)
@@ -80,23 +43,6 @@ void* aligned_alloc(size_t align, size_t size)
 #endif
 
 /**
- * aligned_free works like free(), but we work backwards from the returned
- * pointer to find the correct offset and pointer location to return to free()
- * Note that it is VERY BAD to call free() on an aligned_malloc() pointer.
+ * This function is kept for compatibility and it simply calls free().
  */
-void aligned_free(void* ptr)
-{
-	assert(ptr);
-
-	/*
-	 * Walk backwards from the passed-in pointer to get the pointer offset
-	 * We convert to an offset_t pointer and rely on pointer math to get the data
-	 */
-	offset_t offset = *((offset_t*)ptr - 1);
-
-	/*
-	 * Once we have the offset, we can get our original pointer and call free
-	 */
-	void* base_ptr = (void*)((uint8_t*)ptr - offset);
-	free(base_ptr);
-}
+void aligned_free(void* ptr) { free(ptr); }
