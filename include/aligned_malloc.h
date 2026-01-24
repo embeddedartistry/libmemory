@@ -16,8 +16,6 @@ extern "C" {
  * @brief Allocated aligned memory
  *
  * Allocate memory with at least alignment `align` and size `size`
- * 	Memory which has been allocated with aligned_malloc() must be freed by calling
- *	aligned_free(). Calling free() will result in a panic or other negative effects.
  *
  * @param align Alignment of the memory block.
  *	Alignment refers to the starting address of the memory block.
@@ -59,10 +57,9 @@ void* aligned_malloc(size_t align, size_t size);
 /** Posix Memory Alignment Extension
  *
  * Generated aligned memory. This function forwards the request to aligned malloc.
- * Allocated memory must be freed with aligned_free().
  *
- * @param memptr A pointer to the pointer which will store the aligned memory. The
- *	memory must be freed with aligned_free(). memptr must not be NULL.
+ * @param memptr A pointer to the pointer which will store the aligned memory.
+ * memptr must not be NULL.
  * @param alignment The target alignment for the memory. Must be a power of 2.
  * @param size The size of the allocation. Must be > 0.
  *
@@ -77,8 +74,13 @@ int posix_memalign(void** memptr, size_t alignment, size_t size);
  * @brief Free aligned memory
  *
  * Free memory that was allocated using aligned_malloc().
- * 	This function *must not* be called on memory which was not allocated
- * 	with aligned_malloc().
+ *
+ * This function is kept for compatibility and it simply calls free().
+ * The main allocator now splits blocks to align them making aligned_free
+ * redundant. It was previously necessary to unwrap an offset field in a
+ * wrapper header but now the regular header block is aligned so that free
+ * can be called directly on aligned allocations and the excess alignment
+ * slack is now added to the freelist instead of wasted.
  *
  * @param ptr Pointer to the aligned_memory() block that will be freed.
  */
